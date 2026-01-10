@@ -1,0 +1,6 @@
+#!/bin/bash
+## Description: Quick cache flush (alias for magento cache:flush)
+## Usage: quick-cache-flush
+## Example: "ddev quick-cache-flush"
+
+bin/magento cache:flush

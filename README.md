@@ -120,6 +120,59 @@ ddev xdebug on|off                   # Enable/disable Xdebug
 ddev logs [-s service]               # View logs
 ```
 
+## Custom Commands (from docker-magento)
+
+This template includes custom commands similar to docker-magento for easier workflow:
+
+### Magento CLI
+```bash
+ddev magento [command]                # Run Magento CLI (e.g., ddev magento cache:flush)
+ddev magento-version                  # Show Magento version
+```
+
+### Cache & Performance
+```bash
+ddev cache-clean                     # Clean cache using cache-clean.js
+ddev cache-clean --watch             # Watch mode
+ddev quick-cache-flush               # Quick cache flush
+```
+
+### Deployment
+```bash
+ddev deploy [locales]                # Full deployment (e.g., ddev deploy en_US vi_VN)
+ddev compile                         # Compile DI and generate code
+ddev upgrade                        # Run setup:upgrade and compile
+```
+
+### Indexing
+```bash
+ddev reindex [index_name]           # Reindex all or specific index
+```
+
+### Utilities
+```bash
+ddev log [log_files]                # View Magento logs (e.g., ddev log system.log)
+ddev fixperms [directory]            # Fix filesystem permissions
+ddev setup-domain [domain]          # Setup domain and base URLs
+ddev create-user                    # Create admin or customer user
+ddev n98 [command]                  # Run n98-magerun2 commands
+ddev devconsole                     # Open Magento dev console
+ddev grunt [task]                   # Run Grunt tasks
+```
+
+### Database & Backup
+```bash
+ddev mysqldump [file]               # Backup database
+ddev backup-all [dir]                # Backup database and files
+```
+
+### Redis
+```bash
+ddev redis-cli [command]            # Access Redis CLI
+```
+
+See `.ddev/commands/DDEV_COMMANDS.md` for complete documentation.
+
 ## Troubleshooting
 
 **Port Conflicts**: `ddev describe` to check ports, `ddev stop -p project-name` to stop conflicting project

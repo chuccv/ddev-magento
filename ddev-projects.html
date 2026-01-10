@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDEV Projects Dashboard</title>
+    <meta http-equiv="refresh" content="5">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .info {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #666;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        .project-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .project-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status-running { background: #10b981; color: white; }
+        .status-stopped { background: #ef4444; color: white; }
+        .status-error { background: #f59e0b; color: white; }
+        .status-config { background: #6b7280; color: white; }
+        .project-info { margin-top: 15px; }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #6b7280; font-weight: 500; }
+        .info-value {
+            color: #111827;
+            word-break: break-all;
+            text-align: right;
+        }
+        .info-value a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .info-value a:hover { text-decoration: underline; }
+        .ports-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #e5e7eb;
+        }
+        .ports-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .port-group {
+            margin-bottom: 8px;
+        }
+        .port-service {
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .port-item {
+            font-size: 0.85em;
+            padding: 3px 0;
+            margin-left: 10px;
+        }
+        .port-number {
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 DDEV Projects Dashboard</h1>
+        <div class="info">
+            Auto-refresh every 5 seconds | Last updated: <span id="timestamp"></span>
+        </div>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-name">CursorBase</div>
+                    <span class="status-badge status-error">.ddev/config.yaml missing</span>
+                </div>
+                <div class="project-info">
+                    <div class="info-row"><span class="info-label">Type:</span><span class="info-value"></span></div>
+                    <div class="info-row"><span class="info-label">Location:</span><span class="info-value">~/Documents/CursorBase</span></div>
+                    <div class="info-row"><span class="info-label">Primary URL:</span><span class="info-value"><a href="https://cursorbase.ddev.site" target="_blank">https://cursorbase.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">HTTPS:</span><span class="info-value"><a href="https://cursorbase.ddev.site" target="_blank">https://cursorbase.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">HTTP:</span><span class="info-value"><a href="http://cursorbase.ddev.site" target="_blank">http://cursorbase.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">Mailpit:</span><span class="info-value"><a href="https://cursorbase.ddev.site:8026" target="_blank">Open Mailpit</a></span></div>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-name">ee246</div>
+                    <span class="status-badge status-running">running</span>
+                </div>
+                <div class="project-info">
+                    <div class="info-row"><span class="info-label">Type:</span><span class="info-value">magento2</span></div>
+                    <div class="info-row"><span class="info-label">Location:</span><span class="info-value">~/Sites/ee246</span></div>
+                    <div class="info-row"><span class="info-label">Primary URL:</span><span class="info-value"><a href="https://ee246.ddev.site" target="_blank">https://ee246.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">HTTPS:</span><span class="info-value"><a href="https://ee246.ddev.site" target="_blank">https://ee246.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">HTTP:</span><span class="info-value"><a href="http://ee246.ddev.site" target="_blank">http://ee246.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">Mailpit:</span><span class="info-value"><a href="https://ee246.ddev.site:8026" target="_blank">Open Mailpit</a></span></div>
+                    <div class="ports-section">
+                        <div class="ports-title">Ports:</div>
+                        <div class="port-group">
+                            <div class="port-service">WEB:</div>
+                            <div class="port-item"><span class="port-number">80</span> → <span class="port-number">127.0.0.1:32911</span></div>
+                            <div class="port-item"><span class="port-number">443</span> → <span class="port-number">127.0.0.1:32912</span></div>
+                            <div class="port-item"><span class="port-number">8025</span> → <span class="port-number">127.0.0.1:32913</span></div>
+                        </div>
+                        <div class="port-group">
+                            <div class="port-service">DB:</div>
+                            <div class="port-item"><span class="port-number">3306</span> → <span class="port-number">127.0.0.1:32907</span></div>
+                        </div>
+                        <div class="port-group">
+                            <div class="port-service">DATABASE INFO:</div>
+                            <div class="port-item">Host: <span class="port-number">db</span> | Port: <span class="port-number">32907</span></div>
+                            <div class="port-item">DB: <span class="port-number">db</span> | User: <span class="port-number">db</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-name">gsp</div>
+                    <span class="status-badge status-running">running</span>
+                </div>
+                <div class="project-info">
+                    <div class="info-row"><span class="info-label">Type:</span><span class="info-value">magento2</span></div>
+                    <div class="info-row"><span class="info-label">Location:</span><span class="info-value">~/Sites/gsp</span></div>
+                    <div class="info-row"><span class="info-label">Primary URL:</span><span class="info-value"><a href="https://gsp.ddev.site" target="_blank">https://gsp.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">HTTPS:</span><span class="info-value"><a href="https://gsp.ddev.site" target="_blank">https://gsp.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">HTTP:</span><span class="info-value"><a href="http://gsp.ddev.site" target="_blank">http://gsp.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">Mailpit:</span><span class="info-value"><a href="https://gsp.ddev.site:8026" target="_blank">Open Mailpit</a></span></div>
+                    <div class="ports-section">
+                        <div class="ports-title">Ports:</div>
+                        <div class="port-group">
+                            <div class="port-service">WEB:</div>
+                            <div class="port-item"><span class="port-number">80</span> → <span class="port-number">127.0.0.1:32902</span></div>
+                            <div class="port-item"><span class="port-number">443</span> → <span class="port-number">127.0.0.1:32903</span></div>
+                            <div class="port-item"><span class="port-number">8025</span> → <span class="port-number">127.0.0.1:32904</span></div>
+                        </div>
+                        <div class="port-group">
+                            <div class="port-service">DB:</div>
+                            <div class="port-item"><span class="port-number">3306</span> → <span class="port-number">127.0.0.1:32899</span></div>
+                        </div>
+                        <div class="port-group">
+                            <div class="port-service">REDIS:</div>
+                            <div class="port-item"><span class="port-number">6379</span> → <span class="port-number">127.0.0.1:32896</span></div>
+                        </div>
+                        <div class="port-group">
+                            <div class="port-service">OPENSEARCH:</div>
+                            <div class="port-item"><span class="port-number">9200</span> → <span class="port-number">127.0.0.1:32900</span></div>
+                            <div class="port-item"><span class="port-number">9300</span> → <span class="port-number">127.0.0.1:32901</span></div>
+                        </div>
+                        <div class="port-group">
+                            <div class="port-service">RABBITMQ:</div>
+                            <div class="port-item"><span class="port-number">5672</span> → <span class="port-number">127.0.0.1:32905</span></div>
+                            <div class="port-item"><span class="port-number">15672</span> → <span class="port-number">127.0.0.1:32906</span></div>
+                        </div>
+                        <div class="port-group">
+                            <div class="port-service">DATABASE INFO:</div>
+                            <div class="port-item">Host: <span class="port-number">db</span> | Port: <span class="port-number">32899</span></div>
+                            <div class="port-item">DB: <span class="port-number">db</span> | User: <span class="port-number">db</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-name">testmagento</div>
+                    <span class="status-badge status-running">running</span>
+                </div>
+                <div class="project-info">
+                    <div class="info-row"><span class="info-label">Type:</span><span class="info-value">magento2</span></div>
+                    <div class="info-row"><span class="info-label">Location:</span><span class="info-value">~/Documents/TestMagento</span></div>
+                    <div class="info-row"><span class="info-label">Primary URL:</span><span class="info-value"><a href="https://testmagento.ddev.site" target="_blank">https://testmagento.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">HTTPS:</span><span class="info-value"><a href="https://testmagento.ddev.site" target="_blank">https://testmagento.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">HTTP:</span><span class="info-value"><a href="http://testmagento.ddev.site" target="_blank">http://testmagento.ddev.site</a></span></div>
+                    <div class="info-row"><span class="info-label">Mailpit:</span><span class="info-value"><a href="https://testmagento.ddev.site:8026" target="_blank">Open Mailpit</a></span></div>
+                    <div class="ports-section">
+                        <div class="ports-title">Ports:</div>
+                        <div class="port-group">
+                            <div class="port-service">WEB:</div>
+                            <div class="port-item"><span class="port-number">80</span> → <span class="port-number">127.0.0.1:32775</span></div>
+                            <div class="port-item"><span class="port-number">443</span> → <span class="port-number">127.0.0.1:32776</span></div>
+                            <div class="port-item"><span class="port-number">8025</span> → <span class="port-number">127.0.0.1:32777</span></div>
+                        </div>
+                        <div class="port-group">
+                            <div class="port-service">DB:</div>
+                            <div class="port-item"><span class="port-number">3306</span> → <span class="port-number">127.0.0.1:32774</span></div>
+                        </div>
+                        <div class="port-group">
+                            <div class="port-service">DATABASE INFO:</div>
+                            <div class="port-item">Host: <span class="port-number">db</span> | Port: <span class="port-number">32774</span></div>
+                            <div class="port-item">DB: <span class="port-number">db</span> | User: <span class="port-number">db</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>

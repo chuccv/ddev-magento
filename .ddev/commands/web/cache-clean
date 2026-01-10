@@ -1,0 +1,24 @@
+#!/bin/bash
+## Description: Clean Magento cache using cache-clean.js
+## Usage: cache-clean [options]
+## Example: "ddev cache-clean" or "ddev cache-clean --watch"
+
+COMPOSER_GLOBAL=/var/www/.composer-global
+CACHE_CLEAN=${COMPOSER_GLOBAL}/vendor/bin/cache-clean.js
+
+if [ ! -f "$CACHE_CLEAN" ]; then
+  echo "Installing devtools metapackage, just a moment..."
+  mkdir -p ${COMPOSER_GLOBAL}
+  composer require --working-dir=${COMPOSER_GLOBAL} --quiet markshust/magento2-metapackage-devtools-cli:^1.0
+  echo "Devtools installed."
+fi
+
+if [ "$1" == "--watch" ]; then
+  WATCH_PID=$(ps -eaf | grep "$CACHE_CLEAN --quiet --watch" | grep -v grep | awk '{print $2}')
+  if [[ "" !=  "$WATCH_PID" ]]; then
+    kill -9 "$WATCH_PID"
+  fi
+  $CACHE_CLEAN --quiet --watch &
+else
+  $CACHE_CLEAN "$@"
+fi

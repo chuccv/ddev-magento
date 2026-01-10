@@ -1,0 +1,18 @@
+#!/bin/bash
+## Description: Run standard Magento deployment process
+## Usage: deploy [locales]
+## Example: "ddev deploy" or "ddev deploy en_US vi_VN"
+
+set -e
+
+composer install
+bin/magento maintenance:enable || true
+rm -rf generated/code var/view_preprocessed
+bin/magento cache:flush
+bin/magento setup:upgrade
+bin/magento setup:di:compile
+bin/magento setup:static-content:deploy ${@:-en_US} -f
+bin/magento maintenance:disable
+bin/magento cache:flush
+
+echo "Deployment completed successfully!"

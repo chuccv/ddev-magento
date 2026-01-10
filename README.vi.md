@@ -120,6 +120,59 @@ ddev xdebug on|off                   # Bật/tắt Xdebug
 ddev logs [-s service]               # Xem logs
 ```
 
+## Custom Commands (từ docker-magento)
+
+Template này bao gồm các custom commands tương tự docker-magento để làm việc dễ dàng hơn:
+
+### Magento CLI
+```bash
+ddev magento [command]                # Chạy Magento CLI (vd: ddev magento cache:flush)
+ddev magento-version                  # Hiển thị phiên bản Magento
+```
+
+### Cache & Hiệu Suất
+```bash
+ddev cache-clean                     # Xóa cache bằng cache-clean.js
+ddev cache-clean --watch             # Chế độ watch
+ddev quick-cache-flush               # Xóa cache nhanh
+```
+
+### Deployment
+```bash
+ddev deploy [locales]                # Deployment đầy đủ (vd: ddev deploy en_US vi_VN)
+ddev compile                         # Compile DI và generate code
+ddev upgrade                        # Chạy setup:upgrade và compile
+```
+
+### Indexing
+```bash
+ddev reindex [index_name]           # Reindex tất cả hoặc index cụ thể
+```
+
+### Tiện Ích
+```bash
+ddev log [log_files]                # Xem Magento logs (vd: ddev log system.log)
+ddev fixperms [directory]            # Sửa quyền filesystem
+ddev setup-domain [domain]          # Setup domain và base URLs
+ddev create-user                    # Tạo admin hoặc customer user
+ddev n98 [command]                  # Chạy n98-magerun2 commands
+ddev devconsole                     # Mở Magento dev console
+ddev grunt [task]                   # Chạy Grunt tasks
+```
+
+### Database & Backup
+```bash
+ddev mysqldump [file]               # Backup database
+ddev backup-all [dir]                # Backup database và files
+```
+
+### Redis
+```bash
+ddev redis-cli [command]            # Truy cập Redis CLI
+```
+
+Xem `.ddev/commands/DDEV_COMMANDS.md` để biết tài liệu đầy đủ.
+
 ## Khắc Phục Sự Cố
 
 **Xung Đột Port**: `ddev describe` để kiểm tra ports, `ddev stop -p tên-dự-án` để dừng dự án xung đột

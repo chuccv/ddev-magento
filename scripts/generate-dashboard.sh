@@ -37,7 +37,7 @@ cat > "$OUTPUT_FILE" << 'EOF'
         }
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 20px;
         }
         .project-card {
@@ -93,6 +93,36 @@ cat > "$OUTPUT_FILE" << 'EOF'
             text-decoration: none;
         }
         .info-value a:hover { text-decoration: underline; }
+        .ports-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #e5e7eb;
+        }
+        .ports-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .port-group {
+            margin-bottom: 8px;
+        }
+        .port-service {
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .port-item {
+            font-size: 0.85em;
+            padding: 3px 0;
+            margin-left: 10px;
+        }
+        .port-number {
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -107,6 +137,46 @@ EOF
 ddev list -j 2>/dev/null | python3 -c "
 import sys
 import json
+import subprocess
+import re
+
+def get_port_info(project_name):
+    try:
+        result = subprocess.run(
+            ['ddev', 'describe', project_name, '-j'],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        if result.returncode != 0:
+            return None
+        
+        output = result.stdout
+        json_start = output.find('{\"level\"')
+        if json_start == -1:
+            return None
+        
+        json_string = output[json_start:]
+        json_end = json_string.rfind('}')
+        if json_end == -1:
+            return None
+        
+        json_string = json_string[:json_end + 1]
+        data = json.loads(json_string)
+        return data.get('raw', {})
+    except:
+        return None
+
+def format_port_mapping(mapping):
+    if not mapping:
+        return []
+    ports = []
+    for item in mapping:
+        exposed = item.get('exposed_port', '')
+        host = item.get('host_port', '')
+        if exposed and host:
+            ports.append(f'{exposed}→{host}')
+    return ports
 
 try:
     data = json.load(sys.stdin)
@@ -148,6 +218,67 @@ try:
                 print(f'                    <div class=\"info-row\"><span class=\"info-label\">HTTP:</span><span class=\"info-value\"><a href=\"{http_url}\" target=\"_blank\">{http_url}</a></span></div>')
             if mailpit_url:
                 print(f'                    <div class=\"info-row\"><span class=\"info-label\">Mailpit:</span><span class=\"info-value\"><a href=\"{mailpit_url}\" target=\"_blank\">Open Mailpit</a></span></div>')
+            
+            if status_class == 'running':
+                describe_data = get_port_info(name)
+                if describe_data and 'services' in describe_data:
+                    print(f'                    <div class=\"ports-section\">')
+                    print(f'                        <div class=\"ports-title\">Ports:</div>')
+                    services = describe_data['services']
+                    service_order = ['web', 'db', 'redis', 'opensearch', 'elasticsearch', 'rabbitmq', 'varnish', 'mailpit', 'xhgui']
+                    
+                    for service_name in service_order:
+                        if service_name in services:
+                            service = services[service_name]
+                            service_status = service.get('status', '')
+                            if service_status == 'stopped':
+                                continue
+                            
+                            mapping = service.get('host_ports_mapping', [])
+                            if mapping:
+                                ports = format_port_mapping(mapping)
+                                if ports:
+                                    print(f'                        <div class=\"port-group\">')
+                                    print(f'                            <div class=\"port-service\">{service_name.upper()}:</div>')
+                                    for port_str in ports:
+                                        parts = port_str.split('→')
+                                        if len(parts) == 2:
+                                            exposed, host = parts
+                                            print(f'                            <div class=\"port-item\"><span class=\"port-number\">{exposed}</span> → <span class=\"port-number\">127.0.0.1:{host}</span></div>')
+                                    print(f'                        </div>')
+                    
+                    for service_name, service in services.items():
+                        if service_name not in service_order:
+                            service_status = service.get('status', '')
+                            if service_status == 'stopped':
+                                continue
+                            mapping = service.get('host_ports_mapping', [])
+                            if mapping:
+                                ports = format_port_mapping(mapping)
+                                if ports:
+                                    print(f'                        <div class=\"port-group\">')
+                                    print(f'                            <div class=\"port-service\">{service_name.upper()}:</div>')
+                                    for port_str in ports:
+                                        parts = port_str.split('→')
+                                        if len(parts) == 2:
+                                            exposed, host = parts
+                                            print(f'                            <div class=\"port-item\"><span class=\"port-number\">{exposed}</span> → <span class=\"port-number\">127.0.0.1:{host}</span></div>')
+                                    print(f'                        </div>')
+                    
+                    if 'dbinfo' in describe_data:
+                        dbinfo = describe_data['dbinfo']
+                        db_host = dbinfo.get('host', 'db')
+                        db_port = dbinfo.get('published_port', dbinfo.get('dbPort', '3306'))
+                        db_name = dbinfo.get('dbname', 'db')
+                        db_user = dbinfo.get('username', 'db')
+                        print(f'                        <div class=\"port-group\">')
+                        print(f'                            <div class=\"port-service\">DATABASE INFO:</div>')
+                        print(f'                            <div class=\"port-item\">Host: <span class=\"port-number\">{db_host}</span> | Port: <span class=\"port-number\">{db_port}</span></div>')
+                        print(f'                            <div class=\"port-item\">DB: <span class=\"port-number\">{db_name}</span> | User: <span class=\"port-number\">{db_user}</span></div>')
+                        print(f'                        </div>')
+                    
+                    print(f'                    </div>')
+            
             print(f'                </div>')
             print(f'            </div>')
     else:

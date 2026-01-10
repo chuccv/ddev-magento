@@ -1,0 +1,26 @@
+#!/bin/bash
+## Description: Backup database and files
+## Usage: backup-all [backup_dir]
+## Example: "ddev backup-all" or "ddev backup-all backups"
+
+BACKUP_DIR=${1:-backups}
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+BACKUP_NAME="backup_${TIMESTAMP}"
+
+mkdir -p "$BACKUP_DIR/$BACKUP_NAME"
+
+echo "Backing up database..."
+ddev export-db --file="$BACKUP_DIR/$BACKUP_NAME/database.sql"
+
+echo "Backing up files..."
+tar -czf "$BACKUP_DIR/$BACKUP_NAME/files.tar.gz" \
+  --exclude='vendor' \
+  --exclude='node_modules' \
+  --exclude='var/cache' \
+  --exclude='var/page_cache' \
+  --exclude='var/session' \
+  --exclude='var/tmp' \
+  --exclude='generated' \
+  . 2>/dev/null || echo "File backup completed (some files may have been excluded)"
+
+echo "Backup completed: $BACKUP_DIR/$BACKUP_NAME"

@@ -1,0 +1,6 @@
+#!/bin/bash
+## Description: Access Redis CLI
+## Usage: redis-cli [command]
+## Example: "ddev redis-cli" or "ddev redis-cli PING"
+
+ddev exec -s redis redis-cli "$@"

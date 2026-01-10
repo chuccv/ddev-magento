@@ -1,0 +1,15 @@
+#!/bin/bash
+## Description: Fix filesystem permissions for Magento
+## Usage: fixperms [directory]
+## Example: "ddev fixperms" or "ddev fixperms var"
+
+if [ -z "$1" ]; then
+  echo "Fixing filesystem permissions..."
+  find var vendor pub/static pub/media app/etc \( -type f -or -type d \) -exec chmod u+w {} + 2>/dev/null || true
+  chmod u+x bin/magento 2>/dev/null || true
+else
+  echo "Fixing filesystem permissions for $1..."
+  find "$1" \( -type f -or -type d \) -exec chmod u+w {} + 2>/dev/null || true
+fi
+
+echo "Filesystem permissions fixed."

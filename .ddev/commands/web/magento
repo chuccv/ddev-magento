@@ -1,0 +1,6 @@
+#!/bin/bash
+## Description: Run Magento CLI commands
+## Usage: magento [command]
+## Example: "ddev magento cache:flush"
+
+bin/magento "$@"

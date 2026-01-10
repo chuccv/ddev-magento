@@ -1,0 +1,14 @@
+#!/bin/bash
+## Description: Backup Magento database
+## Usage: mysqldump [output_file]
+## Example: "ddev mysqldump backup.sql" or "ddev mysqldump" (default: backup_$(date +%Y%m%d_%H%M%S).sql)
+
+if [ -z "$1" ]; then
+  OUTPUT_FILE="backup_$(date +%Y%m%d_%H%M%S).sql"
+else
+  OUTPUT_FILE="$1"
+fi
+
+ddev export-db --file="$OUTPUT_FILE"
+
+echo "Database backup created: $OUTPUT_FILE"

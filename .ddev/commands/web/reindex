@@ -1,0 +1,14 @@
+#!/bin/bash
+## Description: Reindex all Magento indexes
+## Usage: reindex [index_name]
+## Example: "ddev reindex" or "ddev reindex catalog_product"
+
+if [ -z "$1" ]; then
+  echo "Reindexing all indexes..."
+  bin/magento indexer:reindex
+else
+  echo "Reindexing: $1"
+  bin/magento indexer:reindex "$1"
+fi
+
+echo "Reindex completed!"

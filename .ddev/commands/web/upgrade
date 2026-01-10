@@ -1,0 +1,21 @@
+#!/bin/bash
+## Description: Run Magento setup:upgrade and compile
+## Usage: upgrade
+## Example: "ddev upgrade"
+
+echo "Running setup:upgrade..."
+bin/magento setup:upgrade
+
+echo "Cleaning generated code..."
+rm -rf generated/code var/view_preprocessed
+
+echo "Compiling DI..."
+bin/magento setup:di:compile
+
+echo "Deploying static content..."
+bin/magento setup:static-content:deploy en_US -f
+
+echo "Flushing cache..."
+bin/magento cache:flush
+
+echo "Upgrade completed!"

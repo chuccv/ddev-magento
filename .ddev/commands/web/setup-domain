@@ -1,0 +1,18 @@
+#!/bin/bash
+## Description: Setup Magento domain name and base URLs
+## Usage: setup-domain [domain]
+## Example: "ddev setup-domain ee246.com"
+
+if [ -z "$1" ]; then
+  echo "Please specify a domain name (ex. ee246.com)"
+  exit 1
+fi
+
+DOMAIN=$1
+
+echo "Setting base URLs to https://${DOMAIN}/"
+bin/magento config:set web/secure/base_url "https://${DOMAIN}/"
+bin/magento config:set web/unsecure/base_url "https://${DOMAIN}/"
+bin/magento cache:flush
+
+echo "Domain setup completed!"

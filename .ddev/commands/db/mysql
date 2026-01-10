@@ -1,0 +1,6 @@
+#!/bin/bash
+## Description: Access MySQL CLI with ddev database credentials
+## Usage: mysql [options]
+## Example: "ddev mysql" or "ddev mysql -e 'SHOW DATABASES;'"
+
+ddev mysql "$@"
