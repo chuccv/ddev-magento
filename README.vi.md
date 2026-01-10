@@ -33,6 +33,27 @@ DDEV là công cụ mã nguồn mở tạo môi trường phát triển dựa tr
 
 3. **Truy cập**: `https://{tên-dự-án}.ddev.site`
 
+## Truy Cập Các Dịch Vụ
+
+### Kiểm Tra Dự Án Đang Chạy
+Để xem tất cả dự án DDEV và trạng thái của chúng:
+```bash
+ddev list
+```
+
+Lệnh này hiển thị tất cả dự án với trạng thái (OK, stopped, v.v.) và URLs.
+
+### URL Dự Án
+- **Website**: `https://{tên-dự-án}.ddev.site`
+- **Trang Quản Trị**: `https://{tên-dự-án}.ddev.site/admin` (kiểm tra `app/etc/env.php` cho URL admin)
+- **Mailpit**: `https://{tên-dự-án}.ddev.site:8026` (test email)
+
+### Truy Cập Services
+- **Database**: Host: `db`, Port: `3306`, User: `db`, Password: `db`
+- **Redis**: `redis:6379` (trong container)
+- **OpenSearch**: `opensearch:9200` (trong container)
+- **RabbitMQ Management**: Có sẵn qua router hoặc `rabbitmq:15672` (User: `magento`, Pass: `magento`)
+
 ## Cấu Hình
 
 ### Dịch Vụ Bao Gồm
@@ -57,7 +78,7 @@ DDEV là công cụ mã nguồn mở tạo môi trường phát triển dựa tr
 ```bash
 # Quản Lý Dự Án
 ddev start|stop|restart              # Khởi động/dừng/khởi động lại
-ddev list                            # Liệt kê tất cả dự án
+ddev list                            # Liệt kê tất cả dự án (hiển thị trạng thái và URLs)
 ddev describe                        # Hiển thị thông tin dự án
 ddev ssh                             # SSH vào web container
 ddev exec <command>                  # Thực thi lệnh trong container

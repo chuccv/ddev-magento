@@ -33,6 +33,27 @@ DDEV is an open-source tool that creates isolated Docker-based development envir
 
 3. **Access**: `https://{project-name}.ddev.site`
 
+## Access Services
+
+### Check Running Projects
+To view all DDEV projects and their status:
+```bash
+ddev list
+```
+
+This shows all projects with their status (OK, stopped, etc.) and URLs.
+
+### Project URLs
+- **Website**: `https://{project-name}.ddev.site`
+- **Admin Panel**: `https://{project-name}.ddev.site/admin` (check `app/etc/env.php` for admin URL)
+- **Mailpit**: `https://{project-name}.ddev.site:8026` (email testing)
+
+### Service Access
+- **Database**: Host: `db`, Port: `3306`, User: `db`, Password: `db`
+- **Redis**: `redis:6379` (inside container)
+- **OpenSearch**: `opensearch:9200` (inside container)
+- **RabbitMQ Management**: Available via router or `rabbitmq:15672` (User: `magento`, Pass: `magento`)
+
 ## Configuration
 
 ### Services Included
@@ -57,7 +78,7 @@ DDEV is an open-source tool that creates isolated Docker-based development envir
 ```bash
 # Project Management
 ddev start|stop|restart              # Start/stop/restart project
-ddev list                            # List all projects
+ddev list                            # List all projects (shows status and URLs)
 ddev describe                        # Show project info
 ddev ssh                             # SSH into web container
 ddev exec <command>                  # Execute command in container
