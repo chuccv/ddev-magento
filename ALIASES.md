@@ -27,7 +27,8 @@ source /path/to/project/.ddev_aliases
 ## Danh Sách Aliases
 
 ### Quản Lý Dự Án
-- `ds` → `ddev start`
+- `ds` → `ddev @` (chạy lệnh trong container)
+- `dstart` → `ddev start`
 - `dst` → `ddev stop`
 - `dr` → `ddev restart`
 - `dlist` → `ddev list`
@@ -67,7 +68,9 @@ source /path/to/project/.ddev_aliases
 
 ```bash
 # Thay vì: ddev start
-ds
+dstart
+# hoặc
+ds  # (chạy lệnh trong container, ví dụ: ds magento --version)
 
 # Thay vì: ddev describe
 ddes
