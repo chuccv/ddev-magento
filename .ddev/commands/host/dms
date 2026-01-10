@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: deploy:mode:set
+## Usage: dms [mode]
+## Example: "ddev dms developer" or "ddev dms production"
+
+ddev magento deploy:mode:set "$@"

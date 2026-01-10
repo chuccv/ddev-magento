@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: indexer:set-mode enable
+## Usage: isen [indexer]
+## Example: "ddev isen" or "ddev isen catalog_product_price"
+
+ddev magento indexer:set-mode enable "$@"

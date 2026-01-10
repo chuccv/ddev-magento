@@ -1,0 +1,28 @@
+#!/bin/bash
+
+## Description: Run CLI script with XHGUI profiling enabled
+## Usage: profile-cli <script.php> [args...]
+## Example: "ddev profile-cli bin/magento cache:flush" or "ddev profile-cli bin/magento setup:upgrade"
+## ProjectTypes: php,laravel,drupal8,drupal9,drupal10,drupal11,typo3,wordpress,magento2
+
+if [ -z "$1" ]; then
+    echo "Usage: ddev profile-cli <script.php> [args...]"
+    echo "Example: ddev profile-cli bin/magento cache:flush"
+    echo "         ddev profile-cli php script.php"
+    exit 1
+fi
+
+SCRIPT="$1"
+shift
+
+if [ ! -f "$SCRIPT" ] && [ ! command -v "$SCRIPT" >/dev/null 2>&1 ]; then
+    echo "Error: Script or command '$SCRIPT' not found"
+    exit 1
+fi
+
+echo "Running with XHGUI profiling enabled: $SCRIPT $*"
+echo "Make sure XHGUI is enabled: ddev xhgui on"
+echo "View results at: ddev xhgui launch"
+echo ""
+
+php "$SCRIPT" "$@"

@@ -1,6 +1,0 @@
-#!/bin/bash
-## Description: Display Magento version
-## Usage: magento-version
-## Example: "ddev magento-version"
-
-bin/magento --version | head -1

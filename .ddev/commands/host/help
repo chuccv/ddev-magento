@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: Hiển thị danh sách các lệnh tắt Magento
+## Usage: help
+## Example: "ddev help"
+
+cat <<EOF
+╔════════════════════════════════════════════════════════════════╗
+║           DDEV MAGENTO SHORTCUT COMMANDS                      ║
+╚════════════════════════════════════════════════════════════════╝
+
+📦 CACHE:
+   cf, cc      cache:clean
+   cfl         cache:flush
+   cs          cache:status
+   cen         cache:enable
+   cdis        cache:disable
+
+🔧 SETUP:
+   su          setup:upgrade
+   sdc         setup:di:compile (xóa generated code)
+   ssd         setup:static-content:deploy
+
+📊 INDEXER:
+   ir          indexer:reindex
+   is          indexer:status
+   isen        indexer:set-mode enable
+   iss         indexer:set-mode schedule
+
+📦 MODULE:
+   ms          module:status
+   men         module:enable
+   mdis        module:disable
+
+🔒 MAINTENANCE:
+   me          maintenance:enable
+   md          maintenance:disable
+
+🚀 DEPLOY:
+   dms         deploy:mode:set
+   dmshow      deploy:mode:show
+
+🛠️  KHÁC:
+   dm2         ddev magento (wrapper)
+   compile     compile DI (giống sdc)
+   deploy      full deployment process
+   magento     ddev magento
+   magento-version  hiển thị version
+
+💡 Sử dụng: ddev <lệnh>
+   Ví dụ: ddev cf, ddev su, ddev ir
+
+EOF

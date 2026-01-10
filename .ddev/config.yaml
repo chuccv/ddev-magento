@@ -1,4 +1,4 @@
-name: gsp
+name: ee248
 type: magento2
 docroot: pub
 php_version: "8.3"
@@ -9,14 +9,13 @@ additional_fqdns: []
 database:
     type: mariadb
     version: "10.6"
+upload_dirs:
+    - media
 use_dns_when_possible: true
 composer_version: "2"
 web_environment: []
 corepack_enable: false
-upload_dirs:
-    - media
-    - var
-disable_settings_management: true
+xhprof_mode: xhgui
 
 # Key features of DDEV's config.yaml:
 

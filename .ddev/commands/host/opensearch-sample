@@ -1,0 +1,51 @@
+#!/bin/bash
+## Description: Create sample data in OpenSearch for testing
+## Usage: opensearch-sample
+
+INDEX_NAME="test_index_$(date +%s)"
+
+echo "Creating index: $INDEX_NAME"
+
+curl -X PUT "http://ddev-${DDEV_SITENAME}-opensearch:9200/$INDEX_NAME" -H 'Content-Type: application/json' -d'
+{
+  "mappings": {
+    "properties": {
+      "name": { "type": "text" },
+      "description": { "type": "text" },
+      "price": { "type": "float" },
+      "created": { "type": "date" }
+    }
+  }
+}'
+
+echo ""
+echo "Adding sample documents..."
+
+curl -X POST "http://ddev-${DDEV_SITENAME}-opensearch:9200/$INDEX_NAME/_doc/1" -H 'Content-Type: application/json' -d'
+{
+  "name": "Sample Product 1",
+  "description": "This is a test product for OpenSearch Dashboards",
+  "price": 99.99,
+  "created": "'$(date -u +"%Y-%m-%dT%H:%M:%S")'"
+}'
+
+curl -X POST "http://ddev-${DDEV_SITENAME}-opensearch:9200/$INDEX_NAME/_doc/2" -H 'Content-Type: application/json' -d'
+{
+  "name": "Sample Product 2",
+  "description": "Another test product",
+  "price": 149.99,
+  "created": "'$(date -u +"%Y-%m-%dT%H:%M:%S")'"
+}'
+
+curl -X POST "http://ddev-${DDEV_SITENAME}-opensearch:9200/$INDEX_NAME/_doc/3" -H 'Content-Type: application/json' -d'
+{
+  "name": "Sample Product 3",
+  "description": "Third test product for viewing data",
+  "price": 79.99,
+  "created": "'$(date -u +"%Y-%m-%dT%H:%M:%S")'"
+}'
+
+echo ""
+echo "Sample data created in index: $INDEX_NAME"
+echo "You can now view this data in OpenSearch Dashboards at: https://ee248.ddev.site:5602"
+echo "Create an index pattern with name: $INDEX_NAME"

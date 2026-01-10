@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: Compile Magento DI và generate code
+## Usage: compile
+## Example: "ddev compile"
+
+ddev exec bash -c "rm -rf generated/code var/view_preprocessed && bin/magento setup:di:compile"
+echo "Compilation completed!"

@@ -1,7 +1,10 @@
 #!/bin/bash
 
-OUTPUT_FILE="ddev-projects.html"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR/.." || exit 1
+
+OUTPUT_FILE="ddev-projects.html"
+DASHBOARD_FILE="scripts/ddev-dashboard.html"
 
 cat > "$OUTPUT_FILE" << 'EOF'
 <!DOCTYPE html>
@@ -297,6 +300,303 @@ cat >> "$OUTPUT_FILE" << 'EOF'
 </html>
 EOF
 
-echo "✅ Dashboard generated: $OUTPUT_FILE"
-echo "📂 Open in browser: file://$(realpath "$OUTPUT_FILE")"
-echo "🌐 Or serve with: python3 -m http.server 8888"
+cat > "$DASHBOARD_FILE" << 'DASHBOARD_EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDEV Projects Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+        button:hover { background: #5568d3; }
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .auto-refresh input { width: 20px; height: 20px; }
+        .info {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #666;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        .project-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .project-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status-running { background: #10b981; color: white; }
+        .status-stopped { background: #ef4444; color: white; }
+        .status-error { background: #f59e0b; color: white; }
+        .status-config { background: #6b7280; color: white; }
+        .project-info { margin-top: 15px; }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #6b7280; font-weight: 500; }
+        .info-value {
+            color: #111827;
+            word-break: break-all;
+            text-align: right;
+        }
+        .info-value a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .info-value a:hover { text-decoration: underline; }
+        .ports-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #e5e7eb;
+        }
+        .ports-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .port-group { margin-bottom: 8px; }
+        .port-service {
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .port-item {
+            font-size: 0.85em;
+            padding: 3px 0;
+            margin-left: 10px;
+        }
+        .port-number {
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .empty {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 DDEV Projects Dashboard</h1>
+        
+        <div class="controls">
+            <button onclick="loadProjects()">🔄 Refresh</button>
+            <div class="auto-refresh">
+                <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()">
+                <label for="autoRefresh">Auto-refresh every 5 seconds</label>
+            </div>
+        </div>
+
+        <div id="projects-container">
+            <div class="loading">Loading projects...</div>
+        </div>
+    </div>
+
+    <script>
+        let autoRefreshInterval = null;
+
+        async function loadProjects() {
+            const container = document.getElementById('projects-container');
+            container.innerHTML = '<div class="loading">Loading projects...</div>';
+
+            try {
+                let response = null;
+                try {
+                    response = await fetch('ddev-dashboard-server.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({})
+                    });
+                } catch (e) {
+                    response = await fetch(window.location.origin + '/api/ddev-list', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({})
+                    }).catch(() => null);
+                }
+
+                if (!response || !response.ok) {
+                    throw new Error('Failed to fetch projects. Run: php -S localhost:8888 -t scripts');
+                }
+
+                const data = await response.json();
+                displayProjects(data.raw || []);
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="error">
+                        <strong>Error:</strong> ${error.message}<br>
+                        <small>Run: <code>php -S localhost:8888 -t scripts</code> to serve this dashboard</small>
+                    </div>
+                `;
+            }
+        }
+
+        function displayProjects(projects) {
+            const container = document.getElementById('projects-container');
+            
+            if (!projects || projects.length === 0) {
+                container.innerHTML = '<div class="empty">No DDEV projects found</div>';
+                return;
+            }
+
+            let html = '<div class="projects-grid">';
+            
+            for (const project of projects) {
+                const name = project.name || 'Unknown';
+                const status = project.status || 'unknown';
+                const statusClass = getStatusClass(status);
+                const type = project.type || 'N/A';
+                const location = project.shortroot || project.approot || 'N/A';
+                const primaryUrl = project.primary_url || '';
+                const httpsUrl = project.httpsurl || '';
+                const httpUrl = project.httpurl || '';
+                const mailpitUrl = project.mailpit_https_url || project.mailpit_url || '';
+
+                html += `
+                    <div class="project-card">
+                        <div class="project-header">
+                            <div class="project-name">${escapeHtml(name)}</div>
+                            <span class="status-badge status-${statusClass}">${escapeHtml(status)}</span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row"><span class="info-label">Type:</span><span class="info-value">${escapeHtml(type)}</span></div>
+                            <div class="info-row"><span class="info-label">Location:</span><span class="info-value">${escapeHtml(location)}</span></div>
+                            ${primaryUrl ? `<div class="info-row"><span class="info-label">Primary URL:</span><span class="info-value"><a href="${primaryUrl}" target="_blank">${escapeHtml(primaryUrl)}</a></span></div>` : ''}
+                            ${httpsUrl ? `<div class="info-row"><span class="info-label">HTTPS:</span><span class="info-value"><a href="${httpsUrl}" target="_blank">${escapeHtml(httpsUrl)}</a></span></div>` : ''}
+                            ${httpUrl ? `<div class="info-row"><span class="info-label">HTTP:</span><span class="info-value"><a href="${httpUrl}" target="_blank">${escapeHtml(httpUrl)}</a></span></div>` : ''}
+                            ${mailpitUrl ? `<div class="info-row"><span class="info-label">Mailpit:</span><span class="info-value"><a href="${mailpitUrl}" target="_blank">Open Mailpit</a></span></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function getStatusClass(status) {
+            if (!status) return 'error';
+            const s = status.toLowerCase();
+            if (s.includes('running') || s === 'ok') return 'running';
+            if (s.includes('stopped')) return 'stopped';
+            if (s.includes('missing') || s.includes('error')) return 'error';
+            return 'config';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function toggleAutoRefresh() {
+            const checkbox = document.getElementById('autoRefresh');
+            if (checkbox.checked) {
+                autoRefreshInterval = setInterval(loadProjects, 5000);
+            } else {
+                if (autoRefreshInterval) {
+                    clearInterval(autoRefreshInterval);
+                    autoRefreshInterval = null;
+                }
+            }
+        }
+
+        loadProjects();
+    </script>
+</body>
+</html>
+DASHBOARD_EOF
+
+echo "✅ Static dashboard generated: $OUTPUT_FILE"
+echo "✅ Dynamic dashboard generated: $DASHBOARD_FILE"
+echo "📂 Static: file://$(realpath "$OUTPUT_FILE")"
+echo "🌐 Dynamic: Run 'php -S localhost:8888 -t scripts' then open http://localhost:8888/ddev-dashboard.html"

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: indexer:set-mode schedule
+## Usage: iss [indexer]
+## Example: "ddev iss" or "ddev iss catalog_product_price"
+
+ddev magento indexer:set-mode schedule "$@"

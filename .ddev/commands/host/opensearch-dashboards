@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: Bật hoặc tắt OpenSearch Dashboards
+## Usage: opensearch-dashboards [on|off]
+## Example: "ddev opensearch-dashboards on" hoặc "ddev opensearch-dashboards off"
+
+set -e
+
+ACTION=${1:-}
+
+DDEV_SITENAME=${DDEV_SITENAME:-$(ddev describe -j 2>/dev/null | grep -o '"name":"[^"]*"' | head -1 | cut -d'"' -f4 || basename "$(pwd)")}
+CONTAINER_NAME="ddev-${DDEV_SITENAME}-opensearch-dashboards"
+
+function show_help() {
+  cat <<EOF
+Usage: ddev opensearch-dashboards [on|off]
+
+Bật hoặc tắt OpenSearch Dashboards service.
+
+Examples:
+  ddev opensearch-dashboards on   # Bật OpenSearch Dashboards
+  ddev opensearch-dashboards off  # Tắt OpenSearch Dashboards
+EOF
+  exit 0
+}
+
+if [ -z "$ACTION" ] || [ "$ACTION" = "--help" ] || [ "$ACTION" = "-h" ]; then
+  show_help
+fi
+
+case "$ACTION" in
+  on)
+    if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+      echo "Bật OpenSearch Dashboards..."
+      docker start "${CONTAINER_NAME}" 2>/dev/null || {
+        echo "Không thể bật container. Đang khởi động lại ddev..."
+        ddev restart
+      }
+      echo "✅ OpenSearch Dashboards đã được bật"
+    else
+      echo "❌ Container ${CONTAINER_NAME} không tồn tại"
+      echo "Chạy 'ddev restart' để tạo container"
+      exit 1
+    fi
+    ;;
+  off)
+    if docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+      echo "Tắt OpenSearch Dashboards..."
+      docker stop "${CONTAINER_NAME}"
+      echo "✅ OpenSearch Dashboards đã được tắt"
+    elif docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+      echo "✅ OpenSearch Dashboards đã được tắt"
+    else
+      echo "❌ Container ${CONTAINER_NAME} không tồn tại"
+      exit 1
+    fi
+    ;;
+  *)
+    echo "❌ Lệnh không hợp lệ: $ACTION"
+    echo "Sử dụng 'on' hoặc 'off'"
+    show_help
+    exit 1
+    ;;
+esac

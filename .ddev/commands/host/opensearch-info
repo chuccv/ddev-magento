@@ -1,0 +1,6 @@
+#!/bin/bash
+## Description: Show OpenSearch cluster information
+## Usage: opensearch-info
+
+echo "OpenSearch Cluster Info:"
+curl -s http://ddev-${DDEV_SITENAME}-opensearch:9200 | jq '.'

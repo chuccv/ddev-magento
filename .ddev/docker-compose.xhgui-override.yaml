@@ -1,0 +1,9 @@
+services:
+  xhgui:
+    volumes:
+      - type: bind
+        source: ${DDEV_APPROOT}/.ddev/xhgui-overrides/src/Twig/TwigExtension.php
+        target: /var/www/xhgui/src/Twig/TwigExtension.php
+        read_only: true
+        bind:
+          create_host_path: true

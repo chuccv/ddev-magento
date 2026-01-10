@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: maintenance:disable
+## Usage: md
+## Example: "ddev md"
+
+ddev magento maintenance:disable

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: Run standard Magento deployment process
+## Usage: deploy [locales]
+## Example: "ddev deploy" or "ddev deploy en_US vi_VN"
+
+set -e
+
+LOCALES=${1:-}
+
+ddev exec bash -c "
+  rm -rf generated/code var/view_preprocessed
+  bin/magento cache:flush
+  bin/magento setup:upgrade
+  bin/magento setup:di:compile
+"
+
+if [ -n "$LOCALES" ]; then
+  ddev magento setup:static-content:deploy -f -j8 $LOCALES
+else
+  ddev magento setup:static-content:deploy -f -j8
+fi
+
+ddev magento maintenance:disable
+ddev magento cache:flush
+
+echo "Deployment completed successfully!"

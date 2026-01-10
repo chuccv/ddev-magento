@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: Display Magento version
+## Usage: magento-version
+## Example: "ddev magento-version"
+
+ddev magento --version 2>/dev/null | head -1 || echo "Unable to get Magento version"

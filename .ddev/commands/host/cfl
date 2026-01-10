@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: cache:flush
+## Usage: cfl
+## Example: "ddev cfl"
+
+ddev magento cache:flush

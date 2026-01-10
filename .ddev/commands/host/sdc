@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: setup:di:compile
+## Usage: sdc
+## Example: "ddev sdc"
+
+ddev exec bash -c "rm -rf generated/code var/view_preprocessed && bin/magento setup:di:compile"
+echo "DI compilation completed!"

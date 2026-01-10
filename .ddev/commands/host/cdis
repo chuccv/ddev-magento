@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: cache:disable
+## Usage: cdis [cache_type]
+## Example: "ddev cdis" or "ddev cdis config"
+
+ddev magento cache:disable "$@"

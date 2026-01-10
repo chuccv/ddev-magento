@@ -1,0 +1,33 @@
+_ddev_custom_commands() {
+    local project_dir=$(pwd)
+    while [ "$project_dir" != "/" ]; do
+        if [ -d "$project_dir/.ddev/commands/host" ]; then
+            local commands_dir="$project_dir/.ddev/commands/host"
+            local commands=$(ls -1 "$commands_dir" 2>/dev/null | grep -v -E "^(README|\.)" | sort | tr '\n' ' ')
+            COMPREPLY=($(compgen -W "$commands" -- "$cur"))
+            return
+        fi
+        project_dir=$(dirname "$project_dir")
+    done
+    
+    local default_dir="$HOME/Sites/ee248/.ddev/commands/host"
+    if [ -d "$default_dir" ]; then
+        local commands=$(ls -1 "$default_dir" 2>/dev/null | grep -v -E "^(README|\.)" | sort | tr '\n' ' ')
+        COMPREPLY=($(compgen -W "$commands" -- "$cur"))
+    fi
+}
+
+_ddev_completion() {
+    local cur prev words cword
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    words=("${COMP_WORDS[@]}")
+    cword=$COMP_CWORD
+
+    if [[ $cword -eq 1 ]]; then
+        _ddev_custom_commands
+    fi
+}
+
+complete -F _ddev_completion ddev

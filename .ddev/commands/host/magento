@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: Run Magento CLI commands
+## Usage: magento [command]
+## Example: "ddev magento cache:flush"
+
+ddev magento "$@"

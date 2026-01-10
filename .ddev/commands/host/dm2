@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: Alias cho ddev magento
+## Usage: dm2 [command]
+## Example: "ddev dm2 cache:flush"
+
+ddev magento "$@"

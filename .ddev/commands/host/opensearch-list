@@ -1,0 +1,5 @@
+#!/bin/bash
+## Description: List all indexes in OpenSearch
+## Usage: opensearch-list
+
+curl -s http://ddev-${DDEV_SITENAME}-opensearch:9200/_cat/indices?v

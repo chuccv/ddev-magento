@@ -1,0 +1,283 @@
+#!/bin/bash
+## Description: Full Magento setup/installation with OpenSearch or Elasticsearch
+## Usage: setup-install [options]
+## Example: "ddev setup-install" or "ddev setup-install --search-engine=opensearch" or "ddev setup-install --search-engine=elasticsearch7" or "ddev setup-install --search-engine=elasticsearch8"
+
+set -e
+
+SKIP_COMPOSER=false
+SKIP_ADMIN=false
+SEARCH_ENGINE=""
+LANGUAGE="en_US"
+ADMIN_USERNAME="admin"
+ADMIN_EMAIL="user@example.com"
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --skip-composer)
+            SKIP_COMPOSER=true
+            shift
+            ;;
+        --skip-admin)
+            SKIP_ADMIN=true
+            shift
+            ;;
+        --search-engine=*)
+            SEARCH_ENGINE="${1#*=}"
+            shift
+            ;;
+        --search-engine)
+            SEARCH_ENGINE="$2"
+            shift 2
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: setup-install [--skip-composer] [--skip-admin] [--search-engine=opensearch|elasticsearch7|elasticsearch8]"
+            exit 1
+            ;;
+    esac
+done
+
+if [ -f "bin/magento" ]; then
+    MAGENTO_BIN="bin/magento"
+elif [ -f "vendor/magento/magento2-base/bin/magento" ]; then
+    if [ ! -f "bin/magento" ]; then
+        mkdir -p bin
+        ln -sf ../vendor/magento/magento2-base/bin/magento bin/magento 2>/dev/null || cp vendor/magento/magento2-base/bin/magento bin/magento
+        chmod +x bin/magento 2>/dev/null || true
+    fi
+    MAGENTO_BIN="bin/magento"
+else
+    echo "Error: bin/magento not found"
+    echo "Please ensure you are in a Magento project directory"
+    exit 1
+fi
+
+MAGENTO_HOSTNAME="${DDEV_PROJECT:-$(basename $(pwd))}"
+
+if [ "$SKIP_COMPOSER" = false ]; then
+    echo "Installing Composer dependencies..."
+    composer install --no-interaction --prefer-dist --optimize-autoloader
+    echo "✓ Composer dependencies installed"
+    echo ""
+    
+    echo "Regenerating autoload files..."
+    composer dump-autoload --optimize 2>/dev/null || true
+    echo "✓ Autoload files regenerated"
+    echo ""
+fi
+
+echo "Creating required directories..."
+mkdir -p var/cache var/page_cache var/generation var/log pub/static pub/media generated app/etc
+# Ensure Magento CLI is executable (DDEV handles permissions automatically)
+chmod +x bin/magento 2>/dev/null || true
+echo "✓ Directories created"
+echo ""
+
+if [ -f "app/etc/env.php" ]; then
+    echo "Magento is already installed (app/etc/env.php exists)"
+    echo ""
+    echo "⚠️  Skipping setup:install - Magento is already installed."
+    echo "   To upgrade, run: ddev upgrade"
+    echo "   To reinstall, delete app/etc/env.php first"
+    echo ""
+    exit 0
+else
+    echo "Setting up Magento installation..."
+    echo ""
+    
+    # Set default values (no prompts)
+    ADMIN_PASSWORD="Password123"
+    ADMIN_FIRSTNAME="Magento"
+    ADMIN_LASTNAME="User"
+    DB_NAME="db"
+    DB_USER="db"
+    DB_PASSWORD="db"
+    DB_HOST="db"
+    
+    if [ -z "$SEARCH_ENGINE" ]; then
+        SEARCH_ENGINE="opensearch"
+    fi
+    
+    if [ "$SEARCH_ENGINE" = "opensearch" ]; then
+        SEARCH_HOST_NAME="opensearch"
+        SEARCH_HOST="opensearch"
+        SEARCH_PORT="9200"
+    elif [ "$SEARCH_ENGINE" = "elasticsearch7" ]; then
+        SEARCH_HOST_NAME="elasticsearch"
+        SEARCH_HOST="elasticsearch"
+        SEARCH_PORT="9200"
+    elif [ "$SEARCH_ENGINE" = "elasticsearch8" ]; then
+        SEARCH_HOST_NAME="elasticsearch"
+        SEARCH_HOST="elasticsearch"
+        SEARCH_PORT="9200"
+    else
+        echo "Error: Invalid search engine. Use 'opensearch', 'elasticsearch7' or 'elasticsearch8'"
+        exit 1
+    fi
+    
+    CURRENCY="USD"
+    TIMEZONE="America/Chicago"
+    BACKEND_FRONTNAME="admin"
+    RABBITMQ_HOST="rabbitmq"
+    RABBITMQ_PORT="5672"
+    RABBITMQ_USER="magento"
+    RABBITMQ_PASSWORD="magento"
+    RABBITMQ_VHOST="/"
+    REDIS_CACHE_SERVER="redis"
+    REDIS_CACHE_PORT="6379"
+    REDIS_CACHE_DB="0"
+    REDIS_PAGE_SERVER="redis"
+    REDIS_PAGE_PORT="6379"
+    REDIS_PAGE_DB="1"
+    REDIS_SESSION_HOST="redis"
+    REDIS_SESSION_PORT="6379"
+    REDIS_SESSION_DB="2"
+    
+    echo "Installing Magento with configuration:"
+    echo "  Base URL: https://${MAGENTO_HOSTNAME}.ddev.site/"
+    echo "  Admin: ${ADMIN_USERNAME} (${ADMIN_EMAIL})"
+    echo "  Database: ${DB_NAME} on ${DB_HOST}"
+    echo "  Search Engine: ${SEARCH_ENGINE} (${SEARCH_HOST}:${SEARCH_PORT})"
+    echo "  Currency: ${CURRENCY}"
+    echo "  Timezone: ${TIMEZONE}"
+    echo "  RabbitMQ: ${RABBITMQ_HOST}:${RABBITMQ_PORT}"
+    echo "  Redis Cache: ${REDIS_CACHE_SERVER}:${REDIS_CACHE_PORT} (DB: ${REDIS_CACHE_DB})"
+    echo "  Redis Page Cache: ${REDIS_PAGE_SERVER}:${REDIS_PAGE_PORT} (DB: ${REDIS_PAGE_DB})"
+    echo "  Redis Session: ${REDIS_SESSION_HOST}:${REDIS_SESSION_PORT} (DB: ${REDIS_SESSION_DB})"
+    echo ""
+    
+    SETUP_ARGS=(
+        --db-host="${DB_HOST}"
+        --db-name="${DB_NAME}"
+        --db-user="${DB_USER}"
+        --db-password="${DB_PASSWORD}"
+        --base-url="https://${MAGENTO_HOSTNAME}.ddev.site/"
+        --base-url-secure="https://${MAGENTO_HOSTNAME}.ddev.site/"
+        --backend-frontname="${BACKEND_FRONTNAME}"
+        --admin-firstname="${ADMIN_FIRSTNAME}"
+        --admin-lastname="${ADMIN_LASTNAME}"
+        --admin-email="${ADMIN_EMAIL}"
+        --admin-user="${ADMIN_USERNAME}"
+        --admin-password="${ADMIN_PASSWORD}"
+        --language="${LANGUAGE}"
+        --currency="${CURRENCY}"
+        --timezone="${TIMEZONE}"
+        --amqp-host="${RABBITMQ_HOST}"
+        --amqp-port="${RABBITMQ_PORT}"
+        --amqp-user="${RABBITMQ_USER}"
+        --amqp-password="${RABBITMQ_PASSWORD}"
+        --amqp-virtualhost="${RABBITMQ_VHOST}"
+        --cache-backend=redis
+        --cache-backend-redis-server="${REDIS_CACHE_SERVER}"
+        --cache-backend-redis-port="${REDIS_CACHE_PORT}"
+        --cache-backend-redis-db="${REDIS_CACHE_DB}"
+        --cache-backend-redis-compress-data=1
+        --cache-backend-redis-compression-lib=gzip
+        --page-cache=redis
+        --page-cache-redis-server="${REDIS_PAGE_SERVER}"
+        --page-cache-redis-port="${REDIS_PAGE_PORT}"
+        --page-cache-redis-db="${REDIS_PAGE_DB}"
+        --page-cache-redis-compress-data=1
+        --page-cache-redis-compression-lib=gzip
+        --session-save=redis
+        --session-save-redis-host="${REDIS_SESSION_HOST}"
+        --session-save-redis-port="${REDIS_SESSION_PORT}"
+        --session-save-redis-db="${REDIS_SESSION_DB}"
+        --session-save-redis-timeout=2.5
+        --session-save-redis-persistent-id=
+        --session-save-redis-compression-threshold=2048
+        --session-save-redis-compression-lib=gzip
+        --session-save-redis-log-level=1
+        --session-save-redis-max-concurrency=6
+        --session-save-redis-break-after-frontend=5
+        --session-save-redis-break-after-adminhtml=30
+        --session-save-redis-first-lifetime=600
+        --session-save-redis-bot-first-lifetime=60
+        --session-save-redis-bot-lifetime=7200
+        --session-save-redis-disable-locking=0
+        --session-save-redis-min-lifetime=60
+        --session-save-redis-max-lifetime=2592000
+        --search-engine="${SEARCH_ENGINE}"
+        --use-rewrites=1
+        --cleanup-database
+        --no-interaction
+    )
+    
+    if [ "$SEARCH_ENGINE" = "opensearch" ]; then
+        SETUP_ARGS+=(--opensearch-host="${SEARCH_HOST}" --opensearch-port="${SEARCH_PORT}")
+    elif [ "$SEARCH_ENGINE" = "elasticsearch7" ]; then
+        SETUP_ARGS+=(--elasticsearch-host="${SEARCH_HOST}" --elasticsearch-port="${SEARCH_PORT}")
+    elif [ "$SEARCH_ENGINE" = "elasticsearch8" ]; then
+        SETUP_ARGS+=(--elasticsearch-host="${SEARCH_HOST}" --elasticsearch-port="${SEARCH_PORT}")
+    fi
+    
+    php "$MAGENTO_BIN" setup:install "${SETUP_ARGS[@]}" || {
+        echo "Error: Magento installation failed"
+        exit 1
+    }
+    
+    echo "✓ Magento installation completed"
+    
+    if [ -n "$SEARCH_ENGINE" ]; then
+        echo ""
+        echo "Configuring Search Engine..."
+        if [ "$SEARCH_ENGINE" = "opensearch" ]; then
+            php "$MAGENTO_BIN" config:set catalog/search/engine opensearch 2>/dev/null || true
+            php "$MAGENTO_BIN" config:set catalog/search/opensearch_server_hostname "${SEARCH_HOST}" 2>/dev/null || true
+            php "$MAGENTO_BIN" config:set catalog/search/opensearch_server_port "${SEARCH_PORT}" 2>/dev/null || true
+            echo "✓ OpenSearch configuration updated"
+        elif [ "$SEARCH_ENGINE" = "elasticsearch7" ]; then
+            php "$MAGENTO_BIN" config:set catalog/search/engine elasticsearch7 2>/dev/null || true
+            php "$MAGENTO_BIN" config:set catalog/search/elasticsearch7_server_hostname "${SEARCH_HOST}" 2>/dev/null || true
+            php "$MAGENTO_BIN" config:set catalog/search/elasticsearch7_server_port "${SEARCH_PORT}" 2>/dev/null || true
+            echo "✓ Elasticsearch7 configuration updated"
+        elif [ "$SEARCH_ENGINE" = "elasticsearch8" ]; then
+            php "$MAGENTO_BIN" config:set catalog/search/engine elasticsearch8 2>/dev/null || true
+            php "$MAGENTO_BIN" config:set catalog/search/elasticsearch8_server_hostname "${SEARCH_HOST}" 2>/dev/null || true
+            php "$MAGENTO_BIN" config:set catalog/search/elasticsearch8_server_port "${SEARCH_PORT}" 2>/dev/null || true
+            echo "✓ Elasticsearch8 configuration updated"
+        fi
+    fi
+fi
+
+echo ""
+echo "Ensuring directories exist..."
+mkdir -p var/cache var/page_cache var/generation var/log pub/static pub/media generated app/etc
+chmod +x bin/magento 2>/dev/null || true
+echo "✓ Directories ensured"
+
+echo ""
+echo "Deploying static content..."
+php "$MAGENTO_BIN" setup:static-content:deploy -f "${LANGUAGE}"
+echo "✓ Static content deployed"
+
+echo ""
+echo "Compiling DI..."
+rm -rf generated/code var/view_preprocessed 2>/dev/null || true
+php "$MAGENTO_BIN" setup:di:compile
+echo "✓ DI compiled"
+
+echo ""
+echo "Reindexing..."
+php "$MAGENTO_BIN" indexer:reindex
+echo "✓ Indexes reindexed"
+
+echo ""
+echo "Flushing cache..."
+php "$MAGENTO_BIN" cache:flush
+echo "✓ Cache flushed"
+
+echo ""
+echo "=== Setup Complete ==="
+echo ""
+echo "Your Magento installation is ready!"
+echo "Frontend: https://${MAGENTO_HOSTNAME}.ddev.site"
+echo "Admin: https://${MAGENTO_HOSTNAME}.ddev.site/admin"
+echo "Mailpit: https://${MAGENTO_HOSTNAME}.ddev.site:8026"
+echo ""
+if [ "$SKIP_ADMIN" = false ] && [ -n "$ADMIN_USERNAME" ] && [ -n "$ADMIN_EMAIL" ]; then
+    echo "Admin credentials:"
+    echo "  Username: ${ADMIN_USERNAME}"
+    echo "  Email: ${ADMIN_EMAIL}"
+fi

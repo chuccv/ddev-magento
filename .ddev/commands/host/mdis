@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: module:disable
+## Usage: mdis [module]
+## Example: "ddev mdis Magento_Catalog"
+
+ddev magento module:disable "$@"

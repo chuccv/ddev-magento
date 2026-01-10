@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#ddev-generated
+
+## Description: Tail Magento log files
+## Usage: log [log_files]
+## Example: "ddev log" or "ddev log system.log exception.log"
+
+if [ -z "$1" ]; then
+  ddev exec bash -c "find var/log/ -type f -name '*.log' -exec tail -f {} + 2>/dev/null || echo 'No log files found'"
+else
+  for log_file in "$@"; do
+    ddev exec bash -c "
+      if [ -f var/log/$log_file ]; then
+        echo '=== $log_file ==='
+        tail -f var/log/$log_file
+      else
+        echo 'Log file $log_file not found'
+      fi
+    " &
+  done
+  wait
+fi
