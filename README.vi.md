@@ -120,6 +120,66 @@ ddev xdebug on|off                   # Bật/tắt Xdebug
 ddev logs [-s service]               # Xem logs
 ```
 
+## DDEV Aliases - Lệnh Rút Gọn
+
+Template này bao gồm file `.ddev_aliases` với các alias rút gọn để tiết kiệm thời gian gõ lệnh.
+
+### Cài Đặt Nhanh
+
+```bash
+# Cách 1: Chạy script tự động
+./setup-aliases.sh
+
+# Cách 2: Nạp thủ công
+source .ddev_aliases
+
+# Cách 3: Thêm vào ~/.bashrc (tự động cho tất cả project)
+echo "source $(pwd)/.ddev_aliases" >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Các Alias Chính
+
+```bash
+# Quản lý dự án
+ds, dst, dr          # start, stop, restart
+ddes, dlist          # describe, list
+dlaunch, dpower      # launch, poweroff
+
+# Container & SSH
+dssh, de, dlog       # ssh, exec, logs
+
+# Database
+ddb, dimp, dexp      # mysql, import-db, export-db
+
+# Composer & PHP
+dcom, dphp, dnode    # composer, php, npm
+
+# Magento
+dmage                # magento
+
+# Debugging
+dx, dxoff            # xdebug on/off
+```
+
+### Ví Dụ
+
+```bash
+# Thay vì: ddev start
+ds
+
+# Thay vì: ddev composer install
+dcom install
+
+# Thay vì: ddev magento cache:flush
+dmage cache:flush
+
+# Thay vì: ddev describe
+ddes
+```
+
+Xem [ALIASES.md](ALIASES.md) để biết hướng dẫn đầy đủ và các cách khác để rút gọn lệnh (bash completion, functions, scripts).
+
 ## Custom Commands (từ docker-magento)
 
 Template này bao gồm các custom commands tương tự docker-magento để làm việc dễ dàng hơn:
@@ -203,6 +263,28 @@ ddev exec rm -rf var/cache/* var/page_cache/* var/generation/*
 - Database: `magento/magento/magento` → `db/db/db`
 - Lệnh: `bin/cli` → `ddev exec`, `bin/bash` → `ddev ssh`
 - Service hosts giữ nguyên: `redis`, `opensearch`, `rabbitmq`
+
+**Các lệnh DDEV có sẵn:**
+
+- `ddev magento` - Chạy lệnh Magento CLI (ví dụ: `ddev magento cache:flush`)
+- `ddev magento-version` - Hiển thị phiên bản Magento
+- `ddev cache-clean` - Xóa cache Magento
+- `ddev quick-cache-flush` - Xóa cache nhanh
+- `ddev deploy` - Deploy static content
+- `ddev compile` - Compile DI
+- `ddev upgrade` - Chạy setup:upgrade
+- `ddev reindex` - Reindex Magento
+- `ddev log` - Xem log Magento
+- `ddev fixperms` - Sửa quyền file
+- `ddev setup-install` - Cài đặt Magento đầy đủ
+- `ddev setup-domain` - Thiết lập domain
+- `ddev create-user` - Tạo admin user
+- `ddev n98` - Chạy lệnh n98-magerun2
+- `ddev mysql` - Truy cập MySQL CLI
+- `ddev mysqldump` - Backup database
+- `ddev redis-cli` - Truy cập Redis CLI
+- `ddev grunt` - Chạy Grunt tasks
+- `ddev devconsole` - Mở development console
 
 ## Tài Liệu
 

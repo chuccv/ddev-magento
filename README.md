@@ -105,7 +105,7 @@ ddev exec <command>                  # Execute command in container
 ddev exec bin/magento cache:clean
 ddev exec bin/magento setup:upgrade
 ddev exec bin/magento setup:di:compile
-ddev exec bin/magento setup:static-content:deploy -f
+ddev exec bin/magento setup:static-content:deploy -f -j8
 
 # Database
 ddev import-db --file=path/to/db.sql
@@ -119,6 +119,66 @@ ddev composer install|update|require vendor/package
 ddev xdebug on|off                   # Enable/disable Xdebug
 ddev logs [-s service]               # View logs
 ```
+
+## DDEV Aliases - Short Commands
+
+This template includes `.ddev_aliases` file with short aliases to save typing time.
+
+### Quick Setup
+
+```bash
+# Option 1: Run setup script
+./setup-aliases.sh
+
+# Option 2: Load manually
+source .ddev_aliases
+
+# Option 3: Add to ~/.bashrc (auto-load for all projects)
+echo "source $(pwd)/.ddev_aliases" >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Main Aliases
+
+```bash
+# Project management
+ds, dst, dr          # start, stop, restart
+ddes, dlist          # describe, list
+dlaunch, dpower      # launch, poweroff
+
+# Container & SSH
+dssh, de, dlog       # ssh, exec, logs
+
+# Database
+ddb, dimp, dexp      # mysql, import-db, export-db
+
+# Composer & PHP
+dcom, dphp, dnode    # composer, php, npm
+
+# Magento
+dmage                # magento
+
+# Debugging
+dx, dxoff            # xdebug on/off
+```
+
+### Examples
+
+```bash
+# Instead of: ddev start
+ds
+
+# Instead of: ddev composer install
+dcom install
+
+# Instead of: ddev magento cache:flush
+dmage cache:flush
+
+# Instead of: ddev describe
+ddes
+```
+
+See [ALIASES.md](ALIASES.md) for complete guide and other ways to shorten commands (bash completion, functions, scripts).
 
 ## Custom Commands (from docker-magento)
 
@@ -203,6 +263,28 @@ Key differences:
 - Database: `magento/magento/magento` → `db/db/db`
 - Commands: `bin/cli` → `ddev exec`, `bin/bash` → `ddev ssh`
 - Service hosts remain the same: `redis`, `opensearch`, `rabbitmq`
+
+**Available DDEV commands:**
+
+- `ddev magento` - Run Magento CLI commands (e.g., `ddev magento cache:flush`)
+- `ddev magento-version` - Display Magento version
+- `ddev cache-clean` - Clean Magento cache
+- `ddev quick-cache-flush` - Quick cache flush
+- `ddev deploy` - Deploy static content
+- `ddev compile` - Compile DI
+- `ddev upgrade` - Run setup:upgrade
+- `ddev reindex` - Reindex Magento
+- `ddev log` - View Magento logs
+- `ddev fixperms` - Fix file permissions
+- `ddev setup-install` - Full Magento installation
+- `ddev setup-domain` - Setup domain
+- `ddev create-user` - Create admin user
+- `ddev n98` - Run n98-magerun2 commands
+- `ddev mysql` - Access MySQL CLI
+- `ddev mysqldump` - Dump database
+- `ddev redis-cli` - Access Redis CLI
+- `ddev grunt` - Run Grunt tasks
+- `ddev devconsole` - Open development console
 
 ## Resources
 
