@@ -36,12 +36,30 @@ DDEV là công cụ mã nguồn mở tạo môi trường phát triển dựa tr
 ## Truy Cập Các Dịch Vụ
 
 ### Kiểm Tra Dự Án Đang Chạy
-Để xem tất cả dự án DDEV và trạng thái của chúng:
+
+**Dòng Lệnh**:
 ```bash
 ddev list
 ```
 
-Lệnh này hiển thị tất cả dự án với trạng thái (OK, stopped, v.v.) và URLs.
+**Custom UI Dashboard** (Tùy chọn):
+Tạo static HTML dashboard:
+```bash
+cd scripts
+./generate-dashboard.sh
+# Mở file ddev-projects.html (tự động refresh mỗi 5 giây)
+```
+
+Hoặc serve với web server:
+```bash
+cd scripts
+python3 -m http.server 8888
+# Mở: http://localhost:8888/ddev-projects.html
+```
+
+**Lưu ý**: Port mặc định là 8888 (tránh xung đột với phpMyAdmin 8080).
+
+Xem `scripts/README.md` để biết thêm các tùy chọn (PHP, Node.js servers).
 
 ### URL Dự Án
 - **Website**: `https://{tên-dự-án}.ddev.site`

@@ -36,12 +36,30 @@ DDEV is an open-source tool that creates isolated Docker-based development envir
 ## Access Services
 
 ### Check Running Projects
-To view all DDEV projects and their status:
+
+**Command Line**:
 ```bash
 ddev list
 ```
 
-This shows all projects with their status (OK, stopped, etc.) and URLs.
+**Custom UI Dashboard** (Optional):
+Generate static HTML dashboard:
+```bash
+cd scripts
+./generate-dashboard.sh
+# Opens ddev-projects.html (auto-refresh every 5s)
+```
+
+Or serve with web server:
+```bash
+cd scripts
+python3 -m http.server 8888
+# Open: http://localhost:8888/ddev-projects.html
+```
+
+**Note**: Default port is 8888 (to avoid conflict with phpMyAdmin on 8080).
+
+See `scripts/README.md` for more options (PHP, Node.js servers).
 
 ### Project URLs
 - **Website**: `https://{project-name}.ddev.site`
