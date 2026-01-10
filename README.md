@@ -1,19 +1,120 @@
-# GSP Magento 2 Project - DDEV Setup
+# Magento 2 DDEV Setup
 
-## English | [Tiếng Việt](#tiếng-việt)
+[English](README.md) | [Tiếng Việt](README.vi.md)
 
 ---
-
-## English
 
 ### Overview
 
 This is a Magento 2 project configured to run with **DDEV**, a local development environment tool. DDEV provides a Docker-based environment with all necessary services for Magento development.
 
+### What is DDEV?
+
+**DDEV** is an open-source tool that simplifies local web development. It creates isolated, reproducible development environments using Docker containers. Key features:
+
+- **Multi-project support**: Manage multiple projects simultaneously without conflicts
+- **Cross-platform**: Works on Linux, macOS, and Windows
+- **Pre-configured**: Supports many CMS/frameworks (Magento, Drupal, WordPress, Laravel, etc.)
+- **Easy setup**: Simple commands for project management
+- **Consistent environment**: Same environment across all team members
+
 ### Prerequisites
 
-- Docker Desktop (or Docker Engine + Docker Compose)
-- DDEV installed ([Installation Guide](https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/))
+- **Docker Desktop** (or Docker Engine + Docker Compose)
+  - Download: [Docker Desktop](https://www.docker.com/products/docker-desktop)
+  - Or install Docker Engine: [Install Docker Engine](https://docs.docker.com/engine/install/)
+- **DDEV** installed ([Installation Guide](https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/))
+
+### Installing DDEV
+
+#### Linux / macOS / WSL2
+
+```bash
+curl -fsSL https://ddev.com/install.sh | bash
+```
+
+After installation, restart your terminal or run:
+```bash
+source ~/.bashrc
+```
+
+#### Verify Installation
+
+```bash
+ddev version
+```
+
+You should see the DDEV version number if installed correctly.
+
+### DDEV Basics
+
+#### Understanding DDEV Structure
+
+- **Project**: Each directory with a `.ddev` folder is a DDEV project
+- **Container**: Each service (web, db, redis) runs in its own Docker container
+- **Router**: DDEV router manages all projects and routes requests to correct containers
+- **Config**: Project configuration is stored in `.ddev/config.yaml`
+
+#### Common DDEV Concepts
+
+1. **Project Name**: Automatically derived from directory name (can be overridden)
+2. **URL**: Each project gets a URL like `{projectname}.ddev.site`
+3. **Services**: Pre-configured services (web, db) plus additional services (redis, opensearch, etc.)
+4. **Multi-project**: Can run multiple projects simultaneously - each has isolated containers
+
+#### Basic DDEV Commands
+
+```bash
+# Check DDEV version
+ddev version
+
+# List all projects
+ddev list
+
+# Start a project (in project directory)
+ddev start
+
+# Stop a project
+ddev stop
+
+# Restart a project
+ddev restart
+
+# Stop all projects
+ddev stop -a
+
+# View project information
+ddev describe
+
+# SSH into web container
+ddev ssh
+
+# Execute command in container
+ddev exec <command>
+
+# View logs
+ddev logs
+```
+
+#### Setting Up a New Project
+
+1. **Create project directory**:
+   ```bash
+   mkdir my-magento-project
+   cd my-magento-project
+   ```
+
+2. **Configure DDEV**:
+   ```bash
+   ddev config --project-type=magento2 --docroot=pub
+   ```
+
+3. **Start the project**:
+   ```bash
+   ddev start
+   ```
+
+4. **Access your project**: `https://my-magento-project.ddev.site`
 
 ### Quick Start
 
@@ -23,27 +124,36 @@ This is a Magento 2 project configured to run with **DDEV**, a local development
 curl -fsSL https://ddev.com/install.sh | bash
 ```
 
-#### 2. Start the Project
+#### 2. Configure Your Project
+
+If you haven't configured DDEV yet for your project:
 
 ```bash
-cd /home/neil/Sites/gsp
+cd /path/to/your/magento/project
+ddev config --project-type=magento2 --docroot=pub
+```
+
+Or if the project is already configured, just start it:
+
+```bash
+cd /path/to/your/magento/project
 ddev start
 ```
 
-The project will be available at: **https://gsp.ddev.site**
+The project will be available at: **https://{project-name}.ddev.site**
 
 #### 3. Access Services
 
-- **Website**: https://gsp.ddev.site
-- **Admin Panel**: https://gsp.ddev.site/admin (check `app/etc/env.php` for admin URL)
+- **Website**: https://{project-name}.ddev.site
+- **Admin Panel**: https://{project-name}.ddev.site/admin (check `app/etc/env.php` for admin URL)
 - **Database**: 
   - Host: `db`
   - Port: `3306` (inside container)
   - Database: `db`
   - Username: `db`
   - Password: `db`
-- **OpenSearch**: http://gsp.ddev.site:9200 (or via port 127.0.0.1:32787)
-- **RabbitMQ Management**: http://gsp.ddev.site:15672 (or via port 127.0.0.1:32793)
+- **OpenSearch**: Available at `opensearch:9200` (inside container)
+- **RabbitMQ Management**: Available at `rabbitmq:15672` (inside container)
   - Username: `magento`
   - Password: `magento`
 - **Redis**: Available at `redis:6379` (inside container)
@@ -197,7 +307,7 @@ ddev start
 
 ```bash
 # View all containers
-docker ps | grep ddev-gsp
+docker ps | grep ddev-
 
 # Check logs
 ddev logs
@@ -230,249 +340,4 @@ This project was migrated from [docker-magento](https://github.com/markshust/doc
 
 ---
 
-## Tiếng Việt
-
-### Tổng Quan
-
-Đây là dự án Magento 2 được cấu hình để chạy với **DDEV**, một công cụ môi trường phát triển local. DDEV cung cấp môi trường dựa trên Docker với tất cả các dịch vụ cần thiết cho phát triển Magento.
-
-### Yêu Cầu
-
-- Docker Desktop (hoặc Docker Engine + Docker Compose)
-- DDEV đã cài đặt ([Hướng dẫn cài đặt](https://ddev.readthedocs.io/en/stable/users/install/ddev-installation/))
-
-### Bắt Đầu Nhanh
-
-#### 1. Cài Đặt DDEV (nếu chưa cài)
-
-```bash
-curl -fsSL https://ddev.com/install.sh | bash
-```
-
-#### 2. Khởi Động Dự Án
-
-```bash
-cd /home/neil/Sites/gsp
-ddev start
-```
-
-Dự án sẽ có sẵn tại: **https://gsp.ddev.site**
-
-#### 3. Truy Cập Các Dịch Vụ
-
-- **Website**: https://gsp.ddev.site
-- **Trang Quản Trị**: https://gsp.ddev.site/admin (kiểm tra `app/etc/env.php` cho URL admin)
-- **Database**: 
-  - Host: `db`
-  - Port: `3306` (trong container)
-  - Database: `db`
-  - Username: `db`
-  - Password: `db`
-- **OpenSearch**: http://gsp.ddev.site:9200 (hoặc qua port 127.0.0.1:32787)
-- **RabbitMQ Management**: http://gsp.ddev.site:15672 (hoặc qua port 127.0.0.1:32793)
-  - Username: `magento`
-  - Password: `magento`
-- **Redis**: Có sẵn tại `redis:6379` (trong container)
-
-### Các Lệnh Thường Dùng
-
-#### Quản Lý Dự Án
-
-```bash
-# Khởi động dự án
-ddev start
-
-# Dừng dự án
-ddev stop
-
-# Khởi động lại dự án
-ddev restart
-
-# Xem thông tin dự án
-ddev describe
-
-# Liệt kê tất cả dự án DDEV
-ddev list
-```
-
-#### Lệnh Magento
-
-```bash
-# Thực thi lệnh Magento CLI
-ddev exec bin/magento cache:clean
-ddev exec bin/magento cache:flush
-ddev exec bin/magento setup:upgrade
-ddev exec bin/magento setup:di:compile
-ddev exec bin/magento setup:static-content:deploy -f
-
-# Hoặc vào container và chạy lệnh trực tiếp
-ddev ssh
-bin/magento cache:clean
-```
-
-#### Thao Tác Database
-
-```bash
-# Import database
-ddev import-db --file=đường/dẫn/database.sql
-
-# Export database
-ddev export-db --file=database_backup.sql
-
-# Truy cập MySQL trực tiếp
-ddev mysql
-# hoặc
-ddev exec mysql -uroot -proot db
-```
-
-#### Lệnh Composer
-
-```bash
-# Cài đặt dependencies
-ddev composer install
-
-# Cập nhật dependencies
-ddev composer update
-
-# Yêu cầu một package
-ddev composer require vendor/package
-```
-
-#### Xdebug
-
-```bash
-# Bật Xdebug (khi cần debug)
-ddev xdebug on
-
-# Tắt Xdebug (mặc định - hiệu suất tốt hơn)
-ddev xdebug off
-```
-
-### Cấu Hình Dự Án
-
-#### Các Dịch Vụ Đã Cài Đặt
-
-- **PHP**: 8.3-FPM
-- **Web Server**: Nginx
-- **Database**: MariaDB 10.6
-- **Cache**: Redis 7.2
-- **Search**: OpenSearch 2.5
-- **Message Queue**: RabbitMQ 3.13
-
-#### Các File Cấu Hình
-
-- **DDEV Config**: `.ddev/config.yaml`
-- **Dịch Vụ Bổ Sung**: `.ddev/docker-compose.magento.yaml`
-- **Magento Config**: `app/etc/env.php`
-
-### Biến Môi Trường
-
-Dự án sử dụng thông tin đăng nhập database mặc định của DDEV:
-- Database: `db`
-- Username: `db`
-- Password: `db`
-- Host: `db`
-
-Redis, OpenSearch và RabbitMQ được cấu hình để sử dụng tên dịch vụ làm host:
-- Redis: `redis:6379`
-- OpenSearch: `opensearch:9200`
-- RabbitMQ: `rabbitmq:5672`
-
-### Khắc Phục Sự Cố
-
-#### Xung Đột Port
-
-Nếu gặp xung đột port:
-
-```bash
-# Kiểm tra port đang được sử dụng
-ddev describe
-
-# Dừng dự án xung đột
-ddev stop -p tên-dự-án-xung-đột
-```
-
-#### Vấn Đề Quyền Truy Cập
-
-```bash
-# Sửa quyền file
-ddev exec chmod -R 777 var pub/static pub/media generated
-ddev exec chown -R www-data:www-data var pub/static pub/media generated
-```
-
-#### Xóa Tất Cả Cache
-
-```bash
-ddev exec bin/magento cache:clean
-ddev exec bin/magento cache:flush
-ddev exec rm -rf var/cache/* var/page_cache/* var/generation/*
-```
-
-#### Xây Dựng Lại Containers
-
-```bash
-# Khởi động lại containers
-ddev restart
-
-# Xây dựng lại hoàn toàn (nếu cần)
-ddev poweroff
-ddev start
-```
-
-#### Kiểm Tra Trạng Thái Dịch Vụ
-
-```bash
-# Xem tất cả containers
-docker ps | grep ddev-gsp
-
-# Xem logs
-ddev logs
-ddev logs -s db
-ddev logs -s redis
-```
-
-### Mẹo Hiệu Suất
-
-1. **Tắt Xdebug** khi không debug (mặc định đã tắt)
-2. **Sử dụng chế độ hiệu suất của DDEV** (Mutagen/NFS) để cải thiện hiệu suất filesystem trên macOS/Windows
-3. **Bật OPcache** trong PHP (đã được cấu hình trong DDEV)
-4. **Sử dụng Redis** cho caching (đã được cấu hình)
-5. **Tối ưu Magento** production mode để hiệu suất tốt hơn
-
-### Chuyển Đổi Từ docker-magento
-
-Dự án này đã được migrate từ [docker-magento](https://github.com/markshust/docker-magento). Các điểm khác biệt chính:
-
-- Thông tin đăng nhập database đã thay đổi từ `magento/magento/magento` sang `db/db/db`
-- Tên hostname dịch vụ vẫn giống nhau (`redis`, `opensearch`, `rabbitmq`)
-- Sử dụng `ddev exec` thay vì `bin/cli` hoặc `bin/root`
-- Sử dụng `ddev ssh` thay vì `bin/bash`
-
-### Liên Kết Hữu Ích
-
-- [Tài Liệu DDEV](https://ddev.readthedocs.io/)
-- [Tài Liệu Magento 2](https://devdocs.magento.com/)
-- [Hướng Dẫn DDEV Magento](https://ddev.readthedocs.io/en/stable/users/project-types/magento/)
-
----
-
-## Quick Reference / Tài Liệu Tham Khảo Nhanh
-
-| English | Tiếng Việt | Command |
-|---------|-----------|---------|
-| Start project | Khởi động dự án | `ddev start` |
-| Stop project | Dừng dự án | `ddev stop` |
-| Restart project | Khởi động lại dự án | `ddev restart` |
-| View info | Xem thông tin | `ddev describe` |
-| SSH into container | SSH vào container | `ddev ssh` |
-| Execute command | Thực thi lệnh | `ddev exec <command>` |
-| Import database | Import database | `ddev import-db --file=<file>` |
-| Export database | Export database | `ddev export-db --file=<file>` |
-| Clear cache | Xóa cache | `ddev exec bin/magento cache:clean` |
-| Enable Xdebug | Bật Xdebug | `ddev xdebug on` |
-| Disable Xdebug | Tắt Xdebug | `ddev xdebug off` |
-
----
-
 **Last Updated**: 2025-01-10
-
