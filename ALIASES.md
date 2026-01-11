@@ -1,33 +1,33 @@
-# DDEV Aliases - Lệnh Rút Gọn
+# DDEV Aliases - Command Shortcuts
 
-File `.ddev_aliases` chứa các alias rút gọn cho các lệnh DDEV thường dùng, giúp tiết kiệm thời gian gõ lệnh.
+The `.ddev_aliases` file contains shorthand aliases for commonly used DDEV commands, helping save time when typing commands.
 
-## Cài Đặt
+## Installation
 
-### Cách 1: Tự Động (Khuyến Nghị)
+### Method 1: Automatic (Recommended)
 
-Chạy script setup:
+Run the setup script:
 ```bash
 source .ddev_aliases
 ```
 
-Hoặc thêm vào `~/.bashrc` để tự động nạp cho tất cả project:
+Or add to `~/.bashrc` to auto-load for all projects:
 ```bash
 echo "source $(pwd)/.ddev_aliases" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-### Cách 2: Thủ Công
+### Method 2: Manual
 
-Thêm vào `~/.bashrc` hoặc `~/.bash_aliases`:
+Add to `~/.bashrc` or `~/.bash_aliases`:
 ```bash
 source /path/to/project/.ddev_aliases
 ```
 
-## Danh Sách Aliases
+## Alias List
 
-### Quản Lý Dự Án
-- `ds` → `ddev @` (chạy lệnh trong container)
+### Project Management
+- `ds` → `ddev ` (run command in container)
 - `dstart` → `ddev start`
 - `dst` → `ddev stop`
 - `dr` → `ddev restart`
@@ -52,65 +52,64 @@ source /path/to/project/.ddev_aliases
 - `dnode` → `ddev exec npm`
 
 ### Magento
-- `dmage` → `ddev magento`
-- `ddrush` → `ddev drush` (cho Drupal)
+- `dm2` → `ddev magento`
 
 ### Debugging
 - `dx` → `ddev xdebug`
 - `dxoff` → `ddev xdebug off`
 
-### Cấu Hình
+### Configuration
 - `dconf` → `ddev config`
 - `dclean` → `ddev clean`
 - `ddel` → `ddev delete`
 
-## Ví Dụ Sử Dụng
+## Usage Examples
 
 ```bash
-# Thay vì: ddev start
+# Instead of: ddev start
 dstart
-# hoặc
-ds  # (chạy lệnh trong container, ví dụ: ds magento --version)
+# or
+ds  # (run command in container, e.g.: ds magento --version)
 
-# Thay vì: ddev describe
+# Instead of: ddev describe
 ddes
 
-# Thay vì: ddev composer install
+# Instead of: ddev composer install
 dcom install
 
-# Thay vì: ddev magento cache:flush
+# Instead of: ddev magento cache:flush
 dmage cache:flush
 
-# Thay vì: ddev exec bin/magento setup:upgrade
+# Instead of: ddev exec bin/magento setup:upgrade
 de bin/magento setup:upgrade
 
-# Thay vì: ddev mysql
+# Instead of: ddev mysql
 ddb
 
-# Thay vì: ddev xdebug on
+# Instead of: ddev xdebug on
 dx on
 ```
 
-## Các Cách Khác Để Rút Gọn Lệnh
+## Other Ways to Shorten Commands
 
-### 1. Bash Completion (Tự Động Hoàn Thành)
+### 1. Bash Completion (Auto-complete)
 
-DDEV có hỗ trợ bash completion. Cài đặt:
+DDEV supports bash completion. Install:
 
 ```bash
-# Tạo completion script
+# Create completion script
 ddev completion bash > ~/.ddev-completion.bash
 
-# Thêm vào ~/.bashrc
+# Add to ~/.bashrc
 echo "source ~/.ddev-completion.bash" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-Sau đó bạn có thể gõ `ddev <TAB>` để xem tất cả lệnh có sẵn.
+Then you can type `ddev <TAB>` to see all available commands.
 
-### 2. Bash Functions (Linh Hoạt Hơn Alias)
+### 2. Bash Functions (More Flexible Than Aliases)
 
-Tạo file `~/.ddev_functions`:
+Create file `~/.ddev_functions`:
 
 ```bash
 d() {
@@ -127,21 +126,21 @@ d() {
 }
 ```
 
-Thêm vào `~/.bashrc`:
+Add to `~/.bashrc`:
 ```bash
 source ~/.ddev_functions
 ```
 
-Sử dụng: `d s`, `d e bin/magento cache:flush`, `d com install`
+Usage: `d s`, `d e bin/magento cache:flush`, `d com install`
 
 ### 3. Custom Scripts
 
-Tạo các script wrapper trong `~/bin/` (thêm vào PATH):
+Create wrapper scripts in `~/bin/` (add to PATH):
 
 ```bash
 mkdir -p ~/bin
 
-# Tạo script dstart
+# Create dstart script
 cat > ~/bin/dstart << 'EOF'
 #!/bin/bash
 ddev start "$@"
@@ -150,59 +149,59 @@ EOF
 chmod +x ~/bin/dstart
 ```
 
-### 4. Sử Dụng History & Search
+### 4. Using History & Search
 
-Bash history có thể giúp bạn:
-- `Ctrl+R`: Tìm kiếm ngược trong history
-- `!!`: Lặp lại lệnh trước
-- `!ddev`: Chạy lệnh ddev gần nhất
+Bash history can help you:
+- `Ctrl+R`: Reverse search in history
+- `!!`: Repeat last command
+- `!ddev`: Run the most recent ddev command
 
-### 5. Tạo Alias Theo Project
+### 5. Create Project-Specific Aliases
 
-Thêm vào `~/.bashrc`:
+Add to `~/.bashrc`:
 ```bash
-# Alias cho project cụ thể
+# Alias for specific project
 alias ee248='cd /home/neil/Sites/ee248 && ddev start'
 alias proj1='cd /path/to/proj1 && ddev start'
 ```
 
-## So Sánh Các Phương Pháp
+## Method Comparison
 
-| Phương Pháp | Ưu Điểm | Nhược Điểm |
-|------------|---------|------------|
-| **Aliases** | Đơn giản, nhanh | Không hỗ trợ arguments phức tạp |
-| **Functions** | Linh hoạt, hỗ trợ arguments | Phức tạp hơn |
-| **Bash Completion** | Tự động gợi ý, không cần nhớ | Cần cài đặt |
-| **Scripts** | Có thể thêm logic phức tạp | Cần quản lý nhiều file |
+| Method | Advantages | Disadvantages |
+|--------|------------|---------------|
+| **Aliases** | Simple, fast | Don't support complex arguments |
+| **Functions** | Flexible, support arguments | More complex |
+| **Bash Completion** | Auto-suggest, no need to remember | Requires installation |
+| **Scripts** | Can add complex logic | Need to manage multiple files |
 
-## Mẹo
+## Tips
 
-1. **Kết hợp nhiều phương pháp**: Dùng aliases cho lệnh đơn giản, functions cho lệnh phức tạp
-2. **Sử dụng history**: `history | grep ddev` để tìm lệnh đã dùng
-3. **Tạo alias nhóm**: `alias dstart='ddev start && ddev launch'`
-4. **Sử dụng với custom commands**: Aliases cũng hoạt động với custom commands như `dmage`, `ddeploy`
+1. **Combine multiple methods**: Use aliases for simple commands, functions for complex commands
+2. **Use history**: `history | grep ddev` to find used commands
+3. **Create group aliases**: `alias dstart='ddev start && ddev launch'`
+4. **Use with custom commands**: Aliases also work with custom commands like `dmage`, `ddeploy`
 
 ## Troubleshooting
 
-**Alias không hoạt động?**
+**Alias not working?**
 ```bash
-# Kiểm tra alias đã được nạp chưa
+# Check if alias is loaded
 alias | grep ddev
 
-# Nạp lại
+# Reload
 source ~/.bashrc
-# hoặc
+# or
 source .ddev_aliases
 ```
 
-**Xung đột với lệnh khác?**
+**Conflict with other commands?**
 ```bash
-# Kiểm tra xem có lệnh nào trùng tên không
+# Check if any command has the same name
 which ds
 type ds
 ```
 
-**Muốn xóa alias?**
+**Want to remove alias?**
 ```bash
 unalias ds
 ```

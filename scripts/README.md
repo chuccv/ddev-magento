@@ -1,8 +1,8 @@
 # DDEV Dashboard Scripts
 
-Custom UI dashboard để xem danh sách DDEV projects thay vì dùng lệnh `ddev list`.
+Custom UI dashboard to view DDEV projects list instead of using `ddev list` command.
 
-## Cách Sử Dụng (Đơn Giản Nhất)
+## Usage (Simplest Way)
 
 ### Generate Static HTML Dashboard
 
@@ -11,31 +11,31 @@ cd scripts
 ./generate-dashboard.sh
 ```
 
-Script sẽ tạo file `ddev-projects.html` - mở trực tiếp trong browser:
-- **Linux/Mac**: `xdg-open ddev-projects.html` hoặc `open ddev-projects.html`
-- **Hoặc click đúp vào file** trong file manager
+The script will create `ddev-projects.html` file - open directly in browser:
+- **Linux/Mac**: `xdg-open ddev-projects.html` or `open ddev-projects.html`
+- **Or double-click the file** in file manager
 
-**Auto-refresh**: File HTML tự động refresh mỗi 5 giây.
+**Auto-refresh**: HTML file automatically refreshes every 5 seconds.
 
-### Hoặc Serve với Web Server
+### Or Serve with Web Server
 
-Sau khi generate, serve với Python:
+After generating, serve with Python:
 ```bash
 cd scripts
 python3 -m http.server 8888
-# Mở: http://localhost:8888/ddev-projects.html
+# Open: http://localhost:8888/ddev-projects.html
 ```
 
-**Lưu ý**: Port 8888 (tránh xung đột với phpMyAdmin 8080).
+**Note**: Port 8888 (to avoid conflict with phpMyAdmin 8080).
 
-## Các Option Khác
+## Other Options
 
-### Python Server với Auto-Refresh API
+### Python Server with Auto-Refresh API
 
 ```bash
 cd scripts
 python3 ddev-dashboard-server.py
-# Mở: http://localhost:8888/
+# Open: http://localhost:8888/
 ```
 
 ### PHP Server
@@ -43,20 +43,20 @@ python3 ddev-dashboard-server.py
 ```bash
 cd scripts
 php -S localhost:8888 -t .
-# Mở: http://localhost:8888/ddev-dashboard.html
+# Open: http://localhost:8888/ddev-dashboard.html
 ```
 
-## Tính Năng
+## Features
 
-- ✅ Hiển thị tất cả DDEV projects với UI đẹp
-- ✅ Hiển thị trạng thái (running, stopped, error)
-- ✅ Hiển thị URLs (HTTP, HTTPS, Mailpit)
-- ✅ Auto-refresh mỗi 5 giây (tùy chọn)
+- ✅ Display all DDEV projects with beautiful UI
+- ✅ Display status (running, stopped, error)
+- ✅ Display URLs (HTTP, HTTPS, Mailpit)
+- ✅ Auto-refresh every 5 seconds (optional)
 - ✅ Responsive design
-- ✅ Click vào URL để mở project
+- ✅ Click on URL to open project
 
-## Lưu Ý
+## Notes
 
-- Cần có `ddev` command trong PATH
-- Server cần quyền thực thi `ddev list -j`
-- Dashboard sử dụng JSON output từ `ddev list -j`
+- Requires `ddev` command in PATH
+- Server needs permission to execute `ddev list -j`
+- Dashboard uses JSON output from `ddev list -j`

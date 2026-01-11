@@ -24,17 +24,17 @@ alias dpower='ddev poweroff'
 alias dlist='ddev list'
 
 
-alias sh='ddev ssh'
+alias dssh='ddev ssh'
 alias dstart='ddev start'
 alias dstop='ddev stop'
 alias ds='ddev '
 
 
 alias cm='sudo chmod -R 777 generated/ var/ pub/'
-alias clg='rm -R generated/; mkdir generated/; sudo chown -R www-data:www-data var generated pub'
+alias clg='rm -R generated/; mkdir generated/'
 alias cmm='rm -R var/cache generated/code ; mkdir var/cache generated/code;sudo chmod -R 777 var/ generated/'
 alias dicp='ddev magento s:d:c'
-alias cf='ddev magento c:f; sudo chown -R www-data:www-data var generated pub'
+alias cf='ddev magento c:f'
 alias cff='ddev magento c:f full_page'
 alias seup='ddev magento s:up'
 alias de='ddev magento s:s:d -f -j4'
