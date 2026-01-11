@@ -289,8 +289,7 @@ Key differences:
 ## Resources
 
 - [DDEV Documentation](https://ddev.readthedocs.io/)
-- [Magento 2 Docs](https://devdocs.magento.com/)
-- [DDEV Magento Guide](https://ddev.readthedocs.io/en/stable/users/project-types/magento/)
+- [DDEV Magento Guide](https://docs.ddev.com/en/stable/users/quickstart/#magento-2/)
 
 ---
 

@@ -289,8 +289,7 @@ ddev exec rm -rf var/cache/* var/page_cache/* var/generation/*
 ## Tài Liệu
 
 - [Tài Liệu DDEV](https://ddev.readthedocs.io/)
-- [Tài Liệu Magento 2](https://devdocs.magento.com/)
-- [Hướng Dẫn DDEV Magento](https://ddev.readthedocs.io/en/stable/users/project-types/magento/)
+- [Hướng Dẫn DDEV Magento](https://docs.ddev.com/en/stable/users/quickstart/#magento-2/)
 
 ---
 
