@@ -1,0 +1,7 @@
+services:
+  db:
+    build: null
+    image: ${DDEV_DBIMAGE}
+  web:
+    build: null
+    image: ${DDEV_WEBIMAGE}
