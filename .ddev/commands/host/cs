@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#ddev-generated
-
-## Description: cache:status
-## Usage: cs
-## Example: "ddev cs"
-
-ddev magento cache:status

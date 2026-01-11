@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#ddev-generated
-
-## Description: setup:upgrade
-## Usage: su
-## Example: "ddev su"
-
-ddev magento setup:upgrade

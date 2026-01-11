@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#ddev-generated
-
-## Description: indexer:status
-## Usage: is
-## Example: "ddev is"
-
-ddev magento indexer:status

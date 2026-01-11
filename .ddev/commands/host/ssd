@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#ddev-generated
-
-## Description: setup:static-content:deploy
-## Usage: ssd [locales]
-## Example: "ddev ssd" or "ddev ssd en_US vi_VN"
-
-ddev magento setup:static-content:deploy -f -j8 "$@"

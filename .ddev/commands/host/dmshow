@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#ddev-generated
-
-## Description: deploy:mode:show
-## Usage: dmshow
-## Example: "ddev dmshow"
-
-ddev magento deploy:mode:show

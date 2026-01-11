@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#ddev-generated
-
-## Description: cache:clean
-## Usage: cc
-## Example: "ddev cc"
-
-ddev magento cache:clean

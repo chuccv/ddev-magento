@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#ddev-generated
-
-## Description: maintenance:enable
-## Usage: me
-## Example: "ddev me"
-
-ddev magento maintenance:enable

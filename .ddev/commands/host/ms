@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#ddev-generated
-
-## Description: module:status
-## Usage: ms [module]
-## Example: "ddev ms" or "ddev ms Magento_Catalog"
-
-ddev magento module:status "$@"

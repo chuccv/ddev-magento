@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#ddev-generated
-
-## Description: module:enable
-## Usage: men [module]
-## Example: "ddev men Magento_Catalog"
-
-ddev magento module:enable "$@"

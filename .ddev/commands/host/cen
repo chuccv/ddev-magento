@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#ddev-generated
-
-## Description: cache:enable
-## Usage: cen [cache_type]
-## Example: "ddev cen" or "ddev cen config"
-
-ddev magento cache:enable "$@"
