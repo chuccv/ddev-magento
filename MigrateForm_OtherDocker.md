@@ -568,7 +568,7 @@ ddev restart
 
 ---
 
-## Method 10: Complete Migration Example (All Services)
+## Method 10: Comjplete Migration Example (All Services)
 
 Complete migration from docker-magento to DDEV:
 
