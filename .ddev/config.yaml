@@ -1,4 +1,4 @@
-name: ee248
+# name: ee248  # Commented out - DDEV will use directory name automatically
 type: magento2
 docroot: pub
 php_version: "8.3"

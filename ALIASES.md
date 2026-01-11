@@ -161,7 +161,7 @@ Bash history can help you:
 Add to `~/.bashrc`:
 ```bash
 # Alias for specific project
-alias ee248='cd /home/neil/Sites/ee248 && ddev start'
+alias myproject='cd /path/to/your/project && ddev start'
 alias proj1='cd /path/to/proj1 && ddev start'
 ```
 

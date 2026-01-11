@@ -64,6 +64,7 @@ See `scripts/README.md` for more options (PHP, Node.js servers).
 ### Project URLs
 - **Website**: `https://{project-name}.ddev.site`
 - **Admin Panel**: `https://{project-name}.ddev.site/admin` (check `app/etc/env.php` for admin URL)
+- **phpMyAdmin**: `https://{project-name}.ddev.site:8037` (database management)
 - **Mailpit**: `https://{project-name}.ddev.site:8026` (email testing)
 
 ### Service Access
@@ -77,6 +78,7 @@ See `scripts/README.md` for more options (PHP, Node.js servers).
 ### Services Included
 - PHP 8.3-FPM, Nginx, MariaDB 10.6
 - Redis 7.2, OpenSearch 2.5, RabbitMQ 3.13
+- phpMyAdmin (database management)
 
 ### Database Credentials
 - Host: `db`, Database: `db`, User: `db`, Password: `db`
@@ -111,6 +113,7 @@ ddev exec bin/magento setup:static-content:deploy -f -j8
 ddev import-db --file=path/to/db.sql
 ddev export-db --file=backup.sql
 ddev mysql                           # Access MySQL CLI
+# phpMyAdmin available at https://{project-name}.ddev.site:8037
 
 # Composer
 ddev composer install|update|require vendor/package

@@ -1,5 +1,0 @@
-alias dm2="ddev magento"
-
-if [ -f "$HOME/Sites/ee248/.ddev/.bash_completion" ]; then
-    source "$HOME/Sites/ee248/.ddev/.bash_completion"
-fi

@@ -64,6 +64,7 @@ Xem `scripts/README.md` để biết thêm các tùy chọn (PHP, Node.js server
 ### URL Dự Án
 - **Website**: `https://{tên-dự-án}.ddev.site`
 - **Trang Quản Trị**: `https://{tên-dự-án}.ddev.site/admin` (kiểm tra `app/etc/env.php` cho URL admin)
+- **phpMyAdmin**: `https://{tên-dự-án}.ddev.site:8037` (quản lý database)
 - **Mailpit**: `https://{tên-dự-án}.ddev.site:8026` (test email)
 
 ### Truy Cập Services
@@ -77,6 +78,7 @@ Xem `scripts/README.md` để biết thêm các tùy chọn (PHP, Node.js server
 ### Dịch Vụ Bao Gồm
 - PHP 8.3-FPM, Nginx, MariaDB 10.6
 - Redis 7.2, OpenSearch 2.5, RabbitMQ 3.13
+- phpMyAdmin (quản lý database)
 
 ### Thông Tin Database
 - Host: `db`, Database: `db`, User: `db`, Password: `db`
@@ -111,6 +113,7 @@ ddev exec bin/magento setup:static-content:deploy -f
 ddev import-db --file=đường/dẫn/db.sql
 ddev export-db --file=backup.sql
 ddev mysql                           # Truy cập MySQL CLI
+# phpMyAdmin có sẵn tại https://{tên-dự-án}.ddev.site:8037
 
 # Composer
 ddev composer install|update|require vendor/package
