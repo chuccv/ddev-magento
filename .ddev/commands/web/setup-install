@@ -121,8 +121,8 @@ else
     BACKEND_FRONTNAME="admin"
     RABBITMQ_HOST="rabbitmq"
     RABBITMQ_PORT="5672"
-    RABBITMQ_USER="magento"
-    RABBITMQ_PASSWORD="magento"
+    RABBITMQ_USER="rabbitmq"
+    RABBITMQ_PASSWORD="rabbitmq"
     RABBITMQ_VHOST="/"
     REDIS_CACHE_SERVER="redis"
     REDIS_CACHE_PORT="6379"
@@ -246,27 +246,6 @@ echo "Ensuring directories exist..."
 mkdir -p var/cache var/page_cache var/generation var/log pub/static pub/media generated app/etc
 chmod +x bin/magento 2>/dev/null || true
 echo "✓ Directories ensured"
-
-echo ""
-echo "Deploying static content..."
-php "$MAGENTO_BIN" setup:static-content:deploy -f "${LANGUAGE}"
-echo "✓ Static content deployed"
-
-echo ""
-echo "Compiling DI..."
-rm -rf generated/code var/view_preprocessed 2>/dev/null || true
-php "$MAGENTO_BIN" setup:di:compile
-echo "✓ DI compiled"
-
-echo ""
-echo "Reindexing..."
-php "$MAGENTO_BIN" indexer:reindex
-echo "✓ Indexes reindexed"
-
-echo ""
-echo "Flushing cache..."
-php "$MAGENTO_BIN" cache:flush
-echo "✓ Cache flushed"
 
 echo ""
 echo "=== Setup Complete ==="

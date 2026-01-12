@@ -1,0 +1,16 @@
+#ddev-generated
+services:
+  web:
+    # image: ddev/ddev-webserver:v1.24.10
+    # build:
+    #   context: .
+    #   dockerfile_inline: "FROM ddev/ddev-webserver:v1.24.10"
+    healthcheck:
+      disable: true
+  db:
+    image: ddev/ddev-dbserver-mariadb-10.6:v1.24.10
+    build:
+      context: .
+      dockerfile_inline: "FROM ddev/ddev-dbserver-mariadb-10.6:v1.24.10"
+    healthcheck:
+      disable: true
